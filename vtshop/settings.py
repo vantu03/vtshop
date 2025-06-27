@@ -113,6 +113,8 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 MEDIA_URL = '/upload/'
 MEDIA_ROOT = BASE_DIR / 'upload'
 
