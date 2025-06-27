@@ -1,0 +1,111 @@
+{% extends "store/base_site.html" %}
+{% load static %}
+{% load format_filters %}
+
+{% block title %}Giỏ hàng{% endblock %}
+
+{% block content %}
+<h1 class="fw-bold mb-4">Giỏ hàng của bạn</h1>
+
+<div id="cartContainer" class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Ảnh</th>
+                <th>Sản phẩm</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Tổng</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="cartItems">
+            <!-- JavaScript sẽ render vào đây -->
+        </tbody>
+        <tfoot id="cartFooter" class="fw-bold">
+            <!-- JavaScript sẽ render tổng tiền -->
+        </tfoot>
+    </table>
+</div>
+
+<div id="emptyCartMessage" class="text-center text-muted" style="display: none;">
+    <i class="bi bi-cart-x fs-1"></i>
+    <p class="mt-2">Chưa có sản phẩm nào trong giỏ hàng.</p>
+    <a href="{% url 'home' %}" class="btn btn-primary mt-2">Tiếp tục mua sắm</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const cartItemsEl = document.getElementById('cartItems');
+    const cartFooterEl = document.getElementById('cartFooter');
+    const emptyCartMessage = document.getElementById('emptyCartMessage');
+
+    if (cart.length === 0) {
+        document.getElementById('cartContainer').style.display = 'none';
+        emptyCartMessage.style.display = 'block';
+        return;
+    }
+
+    // Tải dữ liệu chi tiết sản phẩm qua API giả lập
+    const getProductDetail = async (variantId) => {
+        const res = await fetch(`/get/variant/${variantId}/`);
+        return await res.json();
+    };
+
+    let total = 0;
+
+    for (let item of cart) {
+        const data = await getProductDetail(item.variant_id);
+        const subtotal = data.price * item.quantity;
+        total += subtotal;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><img src="${data.thumbnail}" style="width: 60px; height: 60px; object-fit: contain;" alt="${data.product_name}"></td>
+            <td><a href="/product/${data.product_slug}/">${data.product_name}</a></td>
+            <td class="text-danger fw-bold">${data.price.toLocaleString()}₫</td>
+            <td>
+                <input type="number" value="${item.quantity}" min="1" class="form-control form-control-sm quantity-input" data-variant-id="${item.variant_id}" style="width: 70px;">
+            </td>
+            <td class="fw-bold">${subtotal.toLocaleString()}₫</td>
+            <td><button class="btn btn-sm btn-outline-danger remove-btn" data-variant-id="${item.variant_id}"><i class="bi bi-trash"></i></button></td>
+        `;
+        cartItemsEl.appendChild(row);
+    }
+
+    cartFooterEl.innerHTML = `
+        <tr>
+            <td colspan="4" class="text-end">Tổng cộng:</td>
+            <td class="text-danger fs-5">${total.toLocaleString()}₫</td>
+            <td></td>
+        </tr>
+    `;
+
+    // Xử lý cập nhật số lượng
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('change', (e) => {
+            const variantId = input.dataset.variantId;
+            const newQuantity = parseInt(e.target.value);
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart = cart.map(item => item.variant_id == variantId ? { ...item, quantity: newQuantity } : item);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            location.reload();
+        });
+    });
+
+    // Xử lý xóa
+    document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const variantId = btn.dataset.variantId;
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart = cart.filter(item => item.variant_id != variantId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            location.reload();
+        });
+    });
+});
+</script>
+{% endblock %}

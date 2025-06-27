@@ -1,0 +1,304 @@
+{% extends "store/base_site.html" %}
+{% load static %}
+{% block title %}{{ product.title }}{% endblock %}
+{% block meta_description %}{{ product.description|truncatechars:150 }}{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.name|escapejs }}",
+  "image": [
+    {% for img in product.images.all %}
+      "{{ img.image.url }}"{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ],
+  "description": "{{ product.description|striptags|escapejs }}",
+  "sku": "{{ product.id }}",
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ SITE_DOMAIN }}{{ request.path }}",
+    "priceCurrency": "VND",
+    "price": "{{ variant.price|floatformat:0 }}",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+{% endblock %}
+{% block content %}
+
+<section class="row">
+    <!-- Tiêu đề sản phẩm -->
+    <h1 class="fw-bold py-1">{{ product.name }}</h1>
+    <!-- Ảnh sản phẩm -->
+    <div class="col-md-7 p-4 bg-white shadow-sm">
+        {% if variant.images.count > 0 %}
+            <!-- Carousel chứa toàn bộ ảnh -->
+            <div id="productCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for img in variant.images.all %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ img.image.url }}"
+                             class="d-block w-100 rounded"
+                             style="height: 250px; object-fit: contain; cursor: pointer;"
+                             alt="{{ img.alt_text }}"
+                             data-bs-toggle="modal"
+                             data-bs-target="#imageModal"
+                             data-img-url="{{ img.image.url }}">
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+
+
+            </div>
+
+            <!-- Ảnh nhỏ điều khiển carousel -->
+            <div class="py-1">
+                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                    {% for img in variant.images.all %}
+                    <img src="{{ img.image.url }}" alt="{{ img.alt_text }}"
+                         class="img-thumbnail"
+                         style="width: 50px; height: 50px; object-fit: cover; cursor: pointer;"
+                         data-bs-target="#productCarousel"
+                         data-bs-slide-to="{{ forloop.counter0 }}"
+                         {% if forloop.first %}class="active"{% endif %}>
+                    {% endfor %}
+                </div>
+            </div>
+
+        {% endif %}
+    </div>
+
+    <!-- Thông tin sản phẩm -->
+    <div class="col-md-5 p-4 bg-white shadow-sm" itemscope itemtype="https://schema.org/Product">
+        <meta itemprop="sku" content="{{ product.id }}">
+        <meta itemprop="name" content="{{ product.name }}">
+        {% load format_filters %}
+
+        <div class="p-3 bg-light border rounded d-inline-block mb-3 w-100" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+            <meta itemprop="priceCurrency" content="VND">
+            <meta itemprop="availability" content="https://schema.org/InStock">
+
+            <span class="text-danger h4 fw-bold d-flex align-items-center mb-0">
+                <i class="bi bi-tag-fill me-2"></i>
+                <span itemprop="price">{{ variant.price|currency }}</span>
+            </span>
+        </div>
+        {% if product.variants.count > 1 %}
+            <div class="mb-3">
+                <div class="d-flex flex-wrap gap-2 mt-1">
+                    {% for v in product.variants.all %}
+                        <a class="btn btn-outline{% if v == variant %} active{% endif %}"
+                           href="{% url 'product' slug=product.slug %}?variant={{ v.id }}">
+                            {{ v.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+        {% endif %}
+        <div class="d-grid gap-2">
+            <button class="btn btn-danger btn-lg w-100" data-bs-toggle="modal" data-bs-target="#orderModal">
+                Mua ngay
+            </button>
+
+            <button
+               class="btn btn-outline-primary btn-lg w-100 d-flex align-items-center justify-content-center gap-2"
+               id="addToCartBtn"
+               data-variant-id="{{ variant.id }}">
+                <i class="bi bi-cart-plus"></i>
+                Thêm vào giỏ hàng
+            </button>
+
+        </div>
+
+
+
+        <div class="mb-3 mt-3">
+            <h6 class="text-dark fw-bold">Khuyến mãi</h6>
+            <ul class="small text-muted ps-3">
+                <li>Chưa có khuyến mãi nào</li>
+            </ul>
+        </div>
+
+    </div>
+
+    {% for review in product.reviews.all %}
+        {% if review.is_active %}
+            <div class="bg-white shadow-sm p-4 mt-4" itemprop="review" itemscope itemtype="https://schema.org/Review">
+                <meta itemprop="name" content="{{ review.get_review_type_display }}">
+                <meta itemprop="reviewBody" content="{{ review.content|striptags }}">
+                <h2 class="fw-bold text-primary" itemprop="name">
+                    {{ review.get_review_type_display }} {{ product.name }}
+                </h2>
+                <div class="mt-2" itemprop="reviewBody">{{ review.content|safe }}</div>
+            </div>
+        {% endif %}
+    {% endfor %}
+
+</section >
+<!-- Modal ảnh lớn -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content position-relative bg-transparent border-0">
+            <!-- Nút đóng -->
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            <img id="modalImage" src="#" alt="Ảnh phóng to" class="img-fluid rounded">
+        </div>
+    </div>
+</div>
+
+<!-- Modal Đặt Hàng -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">Đặt hàng nhanh</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="variant_id" value="{{ variant.id }}">
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Họ</label>
+                        <input type="text" name="last_name" id="last_name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">Tên</label>
+                        <input type="text" name="first_name" id="first_name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Số điện thoại</label>
+                        <input type="text" name="phone" id="phone" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Địa chỉ</label>
+                        <textarea name="address" id="address" class="form-control" rows="2" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="note" class="form-label">Ghi chú (tùy chọn)</label>
+                        <textarea name="note" id="note" class="form-control" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Gửi đơn hàng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if messages %}
+<!-- Modal Thông Báo -->
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="messageModalLabel">
+                    <i class="bi bi-info-circle-fill me-2"></i>Thông báo
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} mb-0 d-flex align-items-center gap-2" role="alert">
+                        {% if message.tags == "success" %}
+                            <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                        {% elif message.tags == "error" %}
+                            <i class="bi bi-x-circle-fill text-danger fs-5"></i>
+                        {% elif message.tags == "warning" %}
+                            <i class="bi bi-exclamation-triangle-fill text-warning fs-5"></i>
+                        {% elif message.tags == "info" %}
+                            <i class="bi bi-info-circle-fill text-info fs-5"></i>
+                        {% else %}
+                            <i class="bi bi-bell-fill fs-5"></i>
+                        {% endif %}
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = new bootstrap.Modal(document.getElementById('messageModal'));
+        modal.show();
+    });
+</script>
+{% endif %}
+
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const modalImage = document.getElementById('modalImage');
+    document.querySelectorAll('[data-img-url]').forEach(el => {
+        el.addEventListener('click', () => {
+            modalImage.src = el.getAttribute('data-img-url');
+        });
+    });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    const variantId = addToCartBtn?.dataset?.variantId;
+
+    // Lấy giỏ hàng từ localStorage
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+    // Kiểm tra nếu sản phẩm đã có thì disable nút
+    if (cart.some(item => item.variant_id == variantId)) {
+        addToCartBtn.classList.add('disabled');
+        addToCartBtn.innerHTML = '<i class="bi bi-check2-circle"></i> Đã có trong giỏ hàng';
+    }
+
+    // Xử lý click để thêm vào giỏ
+    addToCartBtn?.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (this.classList.contains('disabled')) return;
+
+        // Thêm vào giỏ
+        cart.push({
+            variant_id: variantId,
+            quantity: 1
+        });
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        // Cập nhật giao diện
+        this.classList.add('disabled');
+        this.innerHTML = '<i class="bi bi-check2-circle"></i> Đã có trong giỏ hàng';
+
+        // (Tùy chọn) Hiện thông báo
+        const toast = document.createElement('div');
+        toast.className = 'toast align-items-center text-bg-success border-0 show position-fixed bottom-0 end-0 m-3';
+        toast.style.zIndex = '9999';
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    Đã thêm sản phẩm vào giỏ hàng!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    });
+});
+</script>
+
+{% endblock %}
