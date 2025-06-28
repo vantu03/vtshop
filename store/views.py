@@ -82,7 +82,7 @@ def product_view(request, slug):
                     if created:
                         user.first_name = first_name
                         user.last_name = last_name
-                        user.set_password(User.objects.make_random_password())
+                        user.set_unusable_password()
                         user.save()
 
                     Order.objects.create(
