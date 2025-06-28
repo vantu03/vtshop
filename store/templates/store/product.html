@@ -6,23 +6,19 @@
 {% block extra_head %}
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org/",
-  "@type": "Product",
-  "name": "{{ product.name|escapejs }}",
-    "image": [
-      {% for img in images %}
-        "{{ request.scheme }}://{{ request.get_host }}{{ img.url }}"{% if not forloop.last %},{% endif %}
-      {% endfor %}
-    ],
-  "description": "{{ product.description|striptags|escapejs }}",
-  "sku": "{{ product.id }}",
-  "offers": {
-    "@type": "Offer",
-    "url": "{{ SITE_DOMAIN }}{{ request.path }}",
-    "priceCurrency": "VND",
-    "price": "{{ variant.price }}",
-    "availability": "https://schema.org/InStock"
-  }
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": "{{ product.name|escapejs }}",
+    "image": [{% for img in images %}"{{ img.url }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+    "description": "{{ product.description|striptags|escapejs }}",
+    "sku": "{{ product.id }}",
+    "offers": {
+        "@type": "Offer",
+        "url": "{{ SITE_DOMAIN }}{{ request.path }}",
+        "priceCurrency": "VND",
+        "price": "{{ variant.price }}",
+        "availability": "https://schema.org/InStock"
+    }
 }
 </script>
 {% endblock %}
