@@ -3,6 +3,9 @@
 {% block title %}{{ product.title }}{% endblock %}
 {% block meta_description %}{{ product.description|truncatechars:150 }}{% endblock %}
 
+{% block og_title %}{{ product.title }}{% endblock %}
+{% block og_description %}{{ product.description|truncatechars:150 }}{% endblock %}
+
 {% block extra_head %}
 <script type="application/ld+json">
 {

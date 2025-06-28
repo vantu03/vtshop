@@ -111,8 +111,10 @@
     <!-- Footer -->
     <footer class=" bg-white shadow-sm py-3">
         <div class="container text-center">
-            &copy; {{ SITE_NAME }} - {{ SITE_AUTHOR }}.
+            <p>&copy; {{ SITE_NAME }} {{ now "Y" }}.</p>
+            <p>Liên hệ: <a href="mailto:{{ EMAIL_HOST_USER }}">{{ EMAIL_HOST_USER }}</a></p>
         </div>
+
     </footer>
 
     {% block extra_js %}{% endblock %}
