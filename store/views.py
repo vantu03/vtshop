@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .models import Product, Order, ProductVariant, Image
+from .models import Product, Order, ProductVariant
 import re
 from django.contrib.sitemaps import Sitemap
 from django.http import JsonResponse
@@ -19,10 +19,6 @@ def product_view(request, slug):
         product.view_count += 1
         product.save(update_fields=['view_count'])
         variant = product.get_variant(request.GET.get("variant"))
-
-        variant_images = Image.objects.filter(
-            productvariantimage__variant=variant
-        ).order_by('productvariantimage__id')
 
         if request.method == 'POST':
             last_name = request.POST.get('last_name', '').strip()
