@@ -37,7 +37,7 @@
             <!-- Carousel chứa toàn bộ ảnh -->
             <div id="productCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    {% for img in variant.images.all %}
+                    {% for img in variant.images.all|dictsort:"id" %}
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
                         <img src="{{ img.image.url }}"
                              class="d-block w-100 rounded"
@@ -63,7 +63,7 @@
             <!-- Ảnh nhỏ điều khiển carousel -->
             <div class="py-1">
                 <div class="d-flex justify-content-center gap-2 flex-wrap">
-                    {% for img in variant.images.all %}
+                    {% for img in variant.images.all|dictsort:"id" %}
                     <img src="{{ img.image.url }}" alt="{{ img.alt_text }}"
                          class="img-thumbnail"
                          style="width: 50px; height: 50px; object-fit: cover; cursor: pointer;"
