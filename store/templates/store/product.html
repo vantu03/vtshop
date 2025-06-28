@@ -5,7 +5,7 @@
 
 {% block og_title %}{{ product.title }}{% endblock %}
 {% block og_description %}{{ product.description|truncatechars:150 }}{% endblock %}
-
+{% load format_filters %}
 {% block extra_head %}
 <script type="application/ld+json">
 {
@@ -109,7 +109,9 @@
         {% endif %}
 
         <div class="d-grid gap-2">
-            <button class="btn btn-danger btn-lg w-100" data-bs-toggle="modal" data-bs-target="#orderModal">
+            <button class="btn btn-danger btn-lg w-100"
+                    id="buyBtn"
+                    data-variant-id="{{ variant.id }}">
                 Mua ngay
             </button>
 
@@ -158,8 +160,104 @@
         {% endif %}
     {% endfor %}
 
+    <section class="bg-white shadow-sm p-4 mt-4">
+        <h5 class="fw-bold">Đánh giá {{ product.name }}</h5>
+
+        {% if product.star_details.total > 0 %}
+            <div class="row p-5">
+
+                <!-- Trung bình sao (trái) -->
+                <div class="col-md-auto d-flex">
+                    <div class="text-center">
+                        <div class="fs-1 fw-bold">
+                            <i class="bi bi-star-fill text-warning"></i> {{ product.average_star|smart_number }}
+                        </div>
+                        <div class="text-muted small">{{ product.star_details.total }} đánh giá</div>
+                    </div>
+                </div>
+
+                <!-- Chi tiết sao (phải) -->
+                <div class="col">
+                    {% for star in product.star_details.stars %}
+                        <div class="d-flex align-items-center mb-1">
+                            <span class="me-2">{{ star.star }} <i class="bi bi-star-fill text-warning"></i></span>
+                            <div class="progress flex-grow-1 me-2" style="height: 8px; max-width: 200px;">
+                                <div class="progress-bar bg-primary" style="width: {{ star.percent|smart_number }}%;"></div>
+                            </div>
+                            <small style="width: 30px">{{ star.percent|smart_number }}%</small>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <button class="btn btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#reviewModal">
+            <i class="bi bi-star"></i> Viết đánh giá
+        </button>
+    </section>
+
+
 
 </section >
+
+<!-- Modal đánh giá -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" class="modal-content">
+            {% csrf_token %}
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-star-fill text-warning"></i> Gửi đánh giá sản phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Chọn sao -->
+                <div class="text-center mb-3" id="star-select">
+                    <div class="d-flex justify-content-center gap-3">
+                        {% for star in stars %}
+                            <div class="text-center" style="cursor: pointer;" data-value="{{ star.star }}">
+                                <i class="bi bi-star star-icon fs-2" style="color: orange;" data-value="{{ star.star }}"></i>
+                                <div class="small text-muted mt-1">{{ star.label }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" name="rating" id="ratingInput" required>
+                </div>
+
+                <!-- Họ tên -->
+                <div class="mb-3">
+                    <label for="name" class="form-label">Họ tên</label>
+                    <input type="text" class="form-control" name="name" id="name" required>
+                </div>
+
+                <!-- Số điện thoại -->
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Số điện thoại</label>
+                    <input type="tel" class="form-control" name="phone" id="phone" required>
+                </div>
+
+                <!-- Nội dung -->
+                <div class="mb-3">
+                    <label for="content" class="form-label">Nội dung đánh giá</label>
+                    <textarea class="form-control" name="content" id="content" rows="3" required></textarea>
+                </div>
+
+                <!-- Đồng ý điều khoản -->
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="agree" required>
+                    <label class="form-check-label" for="agree">
+                        Tôi đồng ý với <a href="#">điều khoản đánh giá</a>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
 <!-- Modal ảnh lớn -->
 <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -171,147 +269,6 @@
     </div>
 </div>
 
-<!-- Modal Đặt Hàng -->
-<div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="POST">
-                {% csrf_token %}
-                <div class="modal-header">
-                    <h5 class="modal-title">Đặt hàng nhanh</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="variant_id" value="{{ variant.id }}">
-                    <div class="mb-3">
-                        <label for="last_name" class="form-label">Họ</label>
-                        <input type="text" name="last_name" id="last_name" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="first_name" class="form-label">Tên</label>
-                        <input type="text" name="first_name" id="first_name" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="phone" class="form-label">Số điện thoại</label>
-                        <input type="text" name="phone" id="phone" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="address" class="form-label">Địa chỉ</label>
-                        <textarea name="address" id="address" class="form-control" rows="2" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="note" class="form-label">Ghi chú (tùy chọn)</label>
-                        <textarea name="note" id="note" class="form-control" rows="2"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger">Gửi đơn hàng</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-{% if messages %}
-<!-- Modal Thông Báo -->
-<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="messageModalLabel">
-                    <i class="bi bi-info-circle-fill me-2"></i>Thông báo
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
-            </div>
-            <div class="modal-body">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} mb-0 d-flex align-items-center gap-2" role="alert">
-                        {% if message.tags == "success" %}
-                            <i class="bi bi-check-circle-fill text-success fs-5"></i>
-                        {% elif message.tags == "error" %}
-                            <i class="bi bi-x-circle-fill text-danger fs-5"></i>
-                        {% elif message.tags == "warning" %}
-                            <i class="bi bi-exclamation-triangle-fill text-warning fs-5"></i>
-                        {% elif message.tags == "info" %}
-                            <i class="bi bi-info-circle-fill text-info fs-5"></i>
-                        {% else %}
-                            <i class="bi bi-bell-fill fs-5"></i>
-                        {% endif %}
-                        <span>{{ message }}</span>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const modal = new bootstrap.Modal(document.getElementById('messageModal'));
-        modal.show();
-    });
-</script>
-{% endif %}
-
-{% endblock %}
-
-{% block extra_js %}
-<script>
-    const modalImage = document.getElementById('modalImage');
-    document.querySelectorAll('[data-img-url]').forEach(el => {
-        el.addEventListener('click', () => {
-            modalImage.src = el.getAttribute('data-img-url');
-        });
-    });
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const addToCartBtn = document.getElementById('addToCartBtn');
-    const variantId = addToCartBtn?.dataset?.variantId;
-
-    // Lấy giỏ hàng từ localStorage
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-
-    // Kiểm tra nếu sản phẩm đã có thì disable nút
-    if (cart.some(item => item.variant_id == variantId)) {
-        addToCartBtn.classList.add('disabled');
-        addToCartBtn.innerHTML = '<i class="bi bi-check2-circle"></i> Đã có trong giỏ hàng';
-    }
-
-    // Xử lý click để thêm vào giỏ
-    addToCartBtn?.addEventListener('click', function (e) {
-        e.preventDefault();
-        if (this.classList.contains('disabled')) return;
-
-        // Thêm vào giỏ
-        cart.push({
-            variant_id: variantId,
-            quantity: 1
-        });
-
-        localStorage.setItem('cart', JSON.stringify(cart));
-
-        // Cập nhật giao diện
-        this.classList.add('disabled');
-        this.innerHTML = '<i class="bi bi-check2-circle"></i> Đã có trong giỏ hàng';
-
-        // (Tùy chọn) Hiện thông báo
-        const toast = document.createElement('div');
-        toast.className = 'toast align-items-center text-bg-success border-0 show position-fixed bottom-0 end-0 m-3';
-        toast.style.zIndex = '9999';
-        toast.innerHTML = `
-            <div class="d-flex">
-                <div class="toast-body">
-                    Đã thêm sản phẩm vào giỏ hàng!
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-            </div>
-        `;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    });
-});
-</script>
+<script src="{% static 'js/product.js' %}"></script>
 
 {% endblock %}

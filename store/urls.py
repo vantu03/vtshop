@@ -14,6 +14,7 @@ urlpatterns = [
         'products': views.ProductSitemap,
     }}, name='sitemap'),
     path("robots.txt", views.robots_txt),
+    path('order/submit/', views.submit_cart_order, name="order_submit")
 ]
 
 if settings.DEBUG:

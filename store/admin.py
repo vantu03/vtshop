@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Image, Product, ProductVariant, ProductContent, Order, Promotion, Review
+from .models import Category, Image, Product, ProductVariant, ProductContent, Order, Promotion, Review, Star, OrderItem
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -41,12 +41,20 @@ class ProductContentAdmin(admin.ModelAdmin):
     list_filter = ('content_type', 'is_active', 'created_at')
     search_fields = ('product__name', 'content')
 
-
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('user', 'variant', 'is_processed', 'created_at')
+    list_display = ('user', 'is_processed', 'created_at')
     list_filter = ('is_processed', 'created_at')
     search_fields = ('user__username', 'address', 'note')
+
+    inlines = []
+
+    class OrderItemInline(admin.TabularInline):
+        model = OrderItem
+        extra = 0
+        readonly_fields = ('variant', 'quantity')
+
+    inlines = [OrderItemInline]
 
 
 @admin.register(Promotion)
@@ -58,8 +66,13 @@ class PromotionAdmin(admin.ModelAdmin):
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('product', 'user', 'rating', 'is_active', 'created_at')
-    list_filter = ('rating', 'is_active', 'created_at')
+    list_display = ('product', 'user', 'star', 'is_active', 'created_at')
+    list_filter = ('star', 'is_active', 'created_at')
     search_fields = ('product__name', 'user__username', 'comment')
     autocomplete_fields = ('product', 'user')
     readonly_fields = ('created_at',)
+
+@admin.register(Star)
+class StarAdmin(admin.ModelAdmin):
+    list_display = ('label', 'star', )
+    list_filter = ('star',)

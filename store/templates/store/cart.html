@@ -5,107 +5,99 @@
 {% block title %}Giỏ hàng{% endblock %}
 
 {% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Trang chủ</a></li>
+        <li class="breadcrumb-item">Giỏi hàng</li>
+    </ol>
+</nav>
+
 <h1 class="fw-bold mb-4">Giỏ hàng của bạn</h1>
 
-<div id="cartContainer" class="table-responsive">
-    <table class="table table-hover align-middle">
-        <thead class="table-light">
-            <tr>
-                <th>Ảnh</th>
-                <th>Sản phẩm</th>
-                <th>Giá</th>
-                <th>Số lượng</th>
-                <th>Tổng</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody id="cartItems">
-            <!-- JavaScript sẽ render vào đây -->
-        </tbody>
-        <tfoot id="cartFooter" class="fw-bold">
-            <!-- JavaScript sẽ render tổng tiền -->
-        </tfoot>
-    </table>
-</div>
-
+<div id="cartContainer" class="vstack gap-3"></div>
 <div id="emptyCartMessage" class="text-center text-muted" style="display: none;">
     <i class="bi bi-cart-x fs-1"></i>
     <p class="mt-2">Chưa có sản phẩm nào trong giỏ hàng.</p>
     <a href="{% url 'home' %}" class="btn btn-primary mt-2">Tiếp tục mua sắm</a>
 </div>
+<div id="cartTotal" class="text-end fs-5 fw-bold text-danger mt-3"></div>
+<!-- Nút Mua hàng -->
+<div class="text-end mt-4">
+    <button class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#checkoutModal">
+        <i class="bi bi-bag-check-fill me-2"></i> Mua hàng
+    </button>
+</div>
+
+<!-- Modal đặt hàng -->
+<div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="checkoutModalLabel">
+                    <i class="bi bi-receipt-cutoff me-2"></i> Thông tin đặt hàng
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <form id="checkoutForm">
+                    <div class="mb-3">
+                        <label class="form-label">Họ</label>
+                        <input type="text" class="form-control" name="last_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tên</label>
+                        <input type="text" class="form-control" name="first_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Số điện thoại</label>
+                        <input type="tel" class="form-control" name="phone" required pattern="[0-9]{9,11}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Địa chỉ</label>
+                        <textarea class="form-control" name="address" rows="2" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ghi chú (tuỳ chọn)</label>
+                        <textarea class="form-control" name="note" rows="2"></textarea>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" id="confirmCheckbox" required>
+                        <label class="form-check-label" for="confirmCheckbox">
+                            Tôi xác nhận thông tin là chính xác
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary w-100" form="checkoutForm">
+                    <i class="bi bi-check-circle me-1"></i> Đặt hàng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal xác nhận xoá -->
+<div class="modal fade" id="confirmRemoveModal" tabindex="-1" aria-labelledby="confirmRemoveModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title" id="confirmRemoveModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Xác nhận xoá
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmRemoveMessage">Bạn có chắc muốn xoá sản phẩm này khỏi giỏ hàng?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+                <button type="button" class="btn btn-danger" id="confirmRemoveBtn">Xác nhận xoá</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/cart.js' %}"></script>
 {% endblock %}
 
-{% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const cartItemsEl = document.getElementById('cartItems');
-    const cartFooterEl = document.getElementById('cartFooter');
-    const emptyCartMessage = document.getElementById('emptyCartMessage');
-
-    if (cart.length === 0) {
-        document.getElementById('cartContainer').style.display = 'none';
-        emptyCartMessage.style.display = 'block';
-        return;
-    }
-
-    // Tải dữ liệu chi tiết sản phẩm qua API giả lập
-    const getProductDetail = async (variantId) => {
-        const res = await fetch(`/get/variant/${variantId}/`);
-        return await res.json();
-    };
-
-    let total = 0;
-
-    for (let item of cart) {
-        const data = await getProductDetail(item.variant_id);
-        const subtotal = data.price * item.quantity;
-        total += subtotal;
-
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td><img src="${data.thumbnail}" style="width: 60px; height: 60px; object-fit: contain;" alt="${data.product_name}"></td>
-            <td><a href="/product/${data.product_slug}/">${data.product_name}</a></td>
-            <td class="text-danger fw-bold">${data.price.toLocaleString()}₫</td>
-            <td>
-                <input type="number" value="${item.quantity}" min="1" class="form-control form-control-sm quantity-input" data-variant-id="${item.variant_id}" style="width: 70px;">
-            </td>
-            <td class="fw-bold">${subtotal.toLocaleString()}₫</td>
-            <td><button class="btn btn-sm btn-outline-danger remove-btn" data-variant-id="${item.variant_id}"><i class="bi bi-trash"></i></button></td>
-        `;
-        cartItemsEl.appendChild(row);
-    }
-
-    cartFooterEl.innerHTML = `
-        <tr>
-            <td colspan="4" class="text-end">Tổng cộng:</td>
-            <td class="text-danger fs-5">${total.toLocaleString()}₫</td>
-            <td></td>
-        </tr>
-    `;
-
-    // Xử lý cập nhật số lượng
-    document.querySelectorAll('.quantity-input').forEach(input => {
-        input.addEventListener('change', (e) => {
-            const variantId = input.dataset.variantId;
-            const newQuantity = parseInt(e.target.value);
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            cart = cart.map(item => item.variant_id == variantId ? { ...item, quantity: newQuantity } : item);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            location.reload();
-        });
-    });
-
-    // Xử lý xóa
-    document.querySelectorAll('.remove-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const variantId = btn.dataset.variantId;
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            cart = cart.filter(item => item.variant_id != variantId);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            location.reload();
-        });
-    });
-});
-</script>
-{% endblock %}

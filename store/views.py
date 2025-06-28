@@ -1,8 +1,9 @@
 from django.conf import settings
 from django.shortcuts import render
-from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+import json
 from django.contrib.auth.models import User
-from .models import Product, Order, ProductVariant
+from .models import Product, Order, ProductVariant, Star, OrderItem
 from django.http import HttpResponse
 from django.contrib.sitemaps import Sitemap
 from django.http import JsonResponse
@@ -10,7 +11,7 @@ from .utils import normalize_and_validate_phone
 
 
 def home_view(request):
-    products = Product.objects.filter(is_active=True).order_by('-created_at')[:12]
+    products = Product.objects.filter(is_active=True).order_by('-created_at')[:10]
     return render(request, 'store/home.html', {'products': products})
 
 def product_view(request, slug):
@@ -22,7 +23,6 @@ def product_view(request, slug):
         product.view_count += 1
         product.save(update_fields=['view_count'])
         variant = product.get_variant(request.GET.get("variant"))
-
 
         images = []
 
@@ -53,56 +53,13 @@ def product_view(request, slug):
         else:
             og_image = None
 
-        if request.method == 'POST':
-            last_name = request.POST.get('last_name', '').strip()
-            first_name = request.POST.get('first_name', '').strip()
-            phone = normalize_and_validate_phone(request.POST.get('phone', '').strip())
-            address = request.POST.get('address', '').strip()
-            note = request.POST.get('note', '').strip()
-            variant_id = request.POST.get('variant_id')
-
-            errors = []
-
-            if not last_name or not first_name:
-                errors.append("Vui lòng nhập đầy đủ họ tên.")
-            if not phone:
-                errors.append("Số điện thoại không hợp lệ.")
-            if not address:
-                errors.append("Vui lòng nhập địa chỉ.")
-
-            variant = product.variants.filter(id=variant_id).first()
-            if not variant:
-                errors.append("Biến thể sản phẩm không hợp lệ.")
-
-            if errors:
-                for error in errors:
-                    messages.error(request, error)
-            else:
-                try:
-                    user, created = User.objects.get_or_create(username=phone)
-                    if created:
-                        user.first_name = first_name
-                        user.last_name = last_name
-                        user.set_unusable_password()
-                        user.save()
-
-                    Order.objects.create(
-                        user=user,
-                        address=address,
-                        note=note,
-                        variant=variant
-                    )
-
-                    messages.success(request, "Đặt hàng thành công! Chúng tôi sẽ liên hệ với bạn.")
-
-                except Exception as e:
-                    messages.error(request, f"Không thể tạo đơn: {e}")
 
         return render(request, 'store/product.html', {
             'product': product,
             'variant': variant,
             'images': images,
             "og_image": og_image,
+            "stars": Star.objects.all().order_by('star')
         })
 
     return render(request, '404.html', status=404)
@@ -156,3 +113,57 @@ def robots_txt(request):
         f"Sitemap: {settings.SITE_DOMAIN}/sitemap.xml"
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain")
+
+@csrf_exempt
+def submit_cart_order(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+
+            # Validate thông tin cá nhân
+            last_name = data.get('last_name', '').strip()
+            first_name = data.get('first_name', '').strip()
+            phone = normalize_and_validate_phone(data.get('phone', '').strip())
+            address = data.get('address', '').strip()
+            note = data.get('note', '').strip()
+
+            if not all([last_name, first_name, phone, address]):
+                return JsonResponse({'error': 'Thiếu thông tin bắt buộc.'}, status=400)
+
+            items = data.get('items', [])
+            if not items:
+                return JsonResponse({'error': 'Giỏ hàng trống.'}, status=400)
+
+            # Tạo user ẩn danh theo số điện thoại
+            user, created = User.objects.get_or_create(username=phone)
+            if created:
+                user.first_name = first_name
+                user.last_name = last_name
+                user.set_unusable_password()
+                user.save()
+
+            # Tạo đơn hàng
+            order = Order.objects.create(
+                user=user,
+                address=address,
+                note=note
+            )
+
+            # Tạo các item trong đơn hàng
+            for item in items:
+                variant_id = item.get('variant_id')
+                quantity = item.get('quantity', 1)
+                variant = ProductVariant.objects.filter(id=variant_id).first()
+                if variant:
+                    OrderItem.objects.create(
+                        order=order,
+                        variant=variant,
+                        quantity=max(1, quantity)
+                    )
+
+            return JsonResponse({'message': 'Đặt hàng thành công!'})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Yêu cầu không hợp lệ.'}, status=405)

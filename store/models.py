@@ -2,6 +2,7 @@ from django.db import models
 from slugify import slugify
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.db.models import Avg, Count
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -63,6 +64,29 @@ class Product(models.Model):
             return self.variants.filter(id=variant_id).first()
         return self.variants.first()
 
+    @property
+    def average_star(self):
+        return self.reviews.filter(is_active=True).aggregate(avg=Avg('star__star'))['avg'] or 0
+
+    @property
+    def star_details(self):
+        total = self.reviews.filter(is_active=True).count()
+        stars = []
+
+        for star in Star.objects.all():
+            count = self.reviews.filter(is_active=True, star__star=star.star).count()
+            percent = (count / total) * 100 if total > 0 else 0
+            stars.append({
+                'star': star.star,
+                'count': count,
+                'percent': percent
+            })
+
+        return {
+            'total': total,
+            'stars': stars,
+        }
+
 class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='variants')
     name = models.CharField(max_length=500)
@@ -76,12 +100,20 @@ class Order(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     address = models.TextField()
     note = models.TextField(blank=True)
-    variant = models.ForeignKey(ProductVariant, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_processed = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.variant.product.name
+        return f"Order #{self.pk} - {self.user.username}"
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    variant = models.ForeignKey(ProductVariant, on_delete=models.SET_NULL, null=True)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.variant} x{self.quantity}"
+
 
 
 class Promotion(models.Model):
@@ -172,10 +204,21 @@ class ProductContent(models.Model):
     def __str__(self):
         return f"{self.content_type} ({self.get_content_type_display()})"
 
+class Star(models.Model):
+    star = models.PositiveSmallIntegerField(unique=True)
+    label = models.CharField(max_length=50)
+
+    class Meta:
+        ordering = ['-star']
+
+    def __str__(self):
+        return f"{self.star} - {self.label}"
+
+
 class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    rating = models.PositiveSmallIntegerField(choices=[(i, f'{i} sao') for i in range(1, 6)])
+    star = models.ForeignKey(Star, on_delete=models.CASCADE)
     comment = models.TextField()
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -184,4 +227,4 @@ class Review(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.rating}sao - {self.product.name}"
+        return f"{self.star.label} - {self.product.name}"
