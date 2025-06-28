@@ -2,15 +2,13 @@
 {% load static %}
 {% block title %}{{ product.title }}{% endblock %}
 {% block meta_description %}{{ product.description|truncatechars:150 }}{% endblock %}
-{% block og_image %}
-    {% if product.thumbnail %}
-        {{ product.thumbnail.image.url }}
-    {% elif product.images.first %}
-        {{ product.images.first.image.url }}
-    {% else %}
-        {% static 'banner.png' %}
-    {% endif %}
-{% endblock %}
+
+{% if product.thumbnail %}
+    {% block og_image %}{{ product.thumbnail.image.url }}{% endblock %}
+{% elif product.images.first %}
+    {% block og_image %}{{ product.images.first.image.url }}{% endblock %}
+{% endif %}
+
 
 {% block extra_head %}
 <script type="application/ld+json">
