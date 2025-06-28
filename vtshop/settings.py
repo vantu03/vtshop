@@ -26,6 +26,7 @@ META_TWITTER_HANDLE = config('META_TWITTER_HANDLE')
 # ========== Thương hiệu ==========
 BRAND_NAME = config('BRAND_NAME')
 BRAND_SLOGAN = config('BRAND_SLOGAN')
+BRAND_EMAIL = config('BRAND_EMAIL')
 
 # ========== Google Analytics ==========
 GA_TRACKING_ID = config('GA_TRACKING_ID', default='')

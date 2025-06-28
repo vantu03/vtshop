@@ -18,7 +18,9 @@ def vtshop_context(request):
         # Thương hiệu
         'BRAND_NAME': settings.BRAND_NAME,
         'BRAND_SLOGAN': settings.BRAND_SLOGAN,
+        'BRAND_EMAIL': settings.BRAND_EMAIL,
 
         # Google Analytics
         'GA_TRACKING_ID': settings.GA_TRACKING_ID,
+
     }
