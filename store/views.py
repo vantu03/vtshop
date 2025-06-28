@@ -2,9 +2,11 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Product, Order, ProductVariant
-import re
+
 from django.contrib.sitemaps import Sitemap
 from django.http import JsonResponse
+from .utils import normalize_and_validate_phone
+
 
 def home_view(request):
     products = Product.objects.filter(is_active=True).order_by('-created_at')[:12]
@@ -53,7 +55,7 @@ def product_view(request, slug):
         if request.method == 'POST':
             last_name = request.POST.get('last_name', '').strip()
             first_name = request.POST.get('first_name', '').strip()
-            phone = request.POST.get('phone', '').strip()
+            phone = normalize_and_validate_phone(request.POST.get('phone', '').strip())
             address = request.POST.get('address', '').strip()
             note = request.POST.get('note', '').strip()
             variant_id = request.POST.get('variant_id')
@@ -63,9 +65,7 @@ def product_view(request, slug):
             if not last_name or not first_name:
                 errors.append("Vui lòng nhập đầy đủ họ tên.")
             if not phone:
-                errors.append("Vui lòng nhập số điện thoại.")
-            elif not re.match(r'^0\d{9}$', phone):
-                errors.append("Số điện thoại không hợp lệ. Phải gồm 10 chữ số và bắt đầu bằng 0.")
+                errors.append("Số điện thoại không hợp lệ.")
             if not address:
                 errors.append("Vui lòng nhập địa chỉ.")
 
@@ -77,23 +77,25 @@ def product_view(request, slug):
                 for error in errors:
                     messages.error(request, error)
             else:
+                try:
+                    user, created = User.objects.get_or_create(username=phone)
+                    if created:
+                        user.first_name = first_name
+                        user.last_name = last_name
+                        user.set_password(User.objects.make_random_password())
+                        user.save()
 
-                user, created = User.objects.get_or_create(username=phone)
-                if created:
-                    user.first_name = first_name
-                    user.last_name = last_name
+                    Order.objects.create(
+                        user=user,
+                        address=address,
+                        note=note,
+                        variant=variant
+                    )
 
-                    user.set_password(User.make_random_password())
-                    user.save()
+                    messages.success(request, "Đặt hàng thành công! Chúng tôi sẽ liên hệ với bạn.")
 
-                Order.objects.create(
-                    user=user,
-                    address=address,
-                    note=note,
-                    variant=variant
-                )
-
-                messages.success(request, "Đặt hàng thành công! Chúng tôi sẽ liên hệ với bạn.")
+                except Exception as e:
+                    messages.error(request, f"Không thể tạo đơn: {e}")
 
         return render(request, 'store/product.html', {
             'product': product,
