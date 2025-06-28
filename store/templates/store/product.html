@@ -29,8 +29,8 @@
 
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'home' %}">Trang chủ</a></li>
-        <li class="breadcrumb-item">{{ product.category_name }}</li>
+        <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Trang chủ</a></li>
+        <li class="breadcrumb-item">{{ product.category.name }}</li>
     </ol>
 </nav>
 
@@ -151,7 +151,7 @@
         {% if content.is_active %}
             <section id="content-{{ content.content_type }}" class="bg-white shadow-sm p-4 mt-4">
                 <h2 class="fw-bold text-primary">
-                    {{ content.get_content_type_display }}
+                    {{ content.get_content_type_display }} {{ product.name }}
                 </h2>
                 <div class="mt-2">{{ content.content|safe }}</div>
             </section>

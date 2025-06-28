@@ -6,14 +6,16 @@
     {% load format_filters %}
     {% for product in products %}
     <a href="{% url 'product' slug=product.slug %}" class="text-decoration-none text-dark">
-        <div class="card shadow-sm border-0 p-2" style="width: 180px; transition: transform 0.2s;">
-            <img src="{{ product.thumbnail.image.url }}" class="card-img-top" alt="{{ product.name }}"
-                 style="width: 100%; height: 180px; object-fit: contain;">
-            <div class="card-body p-2">
+        <div class="card shadow-sm border-0 p-2" style="width: 180px; height: 320px;">
+            <img src="{{ product.thumbnail.image.url }}" class="card-img-top"
+                 style="width: 100%; height: 180px; object-fit: contain; background-color: #f9f9f9;"
+                 alt="{{ product.name }}">
+            <div class="card-body p-2 d-flex flex-column justify-content-between" style="height: 120px;">
                 <h6 class="card-title text-primary mb-1">{{ product.name }}</h6>
                 <p class="text-danger fw-bold mb-0">{{ product.get_variant.price|currency }}</p>
             </div>
         </div>
+
     </a>
     {% endfor %}
 </div>
