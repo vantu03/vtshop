@@ -115,6 +115,19 @@
 
         </div>
 
+        {% if product.contents.all %}
+            <ul class="nav small mb-4">
+                {% for content in product.contents.all %}
+                    {% if content.is_active %}
+                        <li class="nav-item me-3">
+                            <a class="nav-link p-0" href="#content-{{ content.content_type }}">
+                                {{ content.get_content_type_display }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
 
 
         <div class="mb-3 mt-3">
@@ -128,14 +141,15 @@
 
     {% for content in product.contents.all %}
         {% if content.is_active %}
-            <div class="bg-white shadow-sm p-4 mt-4" >
+            <section id="content-{{ content.content_type }}" class="bg-white shadow-sm p-4 mt-4">
                 <h2 class="fw-bold text-primary">
-                    {{ content.get_content_type_display }} {{ product.name }}
+                    {{ content.get_content_type_display }}
                 </h2>
                 <div class="mt-2">{{ content.content|safe }}</div>
-            </div>
+            </section>
         {% endif %}
     {% endfor %}
+
 
 </section >
 <!-- Modal ảnh lớn -->
