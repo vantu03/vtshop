@@ -96,15 +96,16 @@
             <div class="mb-3">
                 <div class="d-flex flex-wrap gap-2 mt-1">
                     {% for v in product.variants.all %}
-                        <a class="btn btn-outline{% if v == variant %} active{% endif %}"
+                        <a class="btn btn-outline-secondary rounded-pill
+                                  {% if v == variant %} active bg-primary bg-opacity-25 text-dark border-primary {% endif %}"
                            href="{% url 'product' slug=product.slug %}?variant={{ v.id }}">
-                            {{ v.name }}
+                            {{ v.name|safe }}
                         </a>
                     {% endfor %}
                 </div>
             </div>
-
         {% endif %}
+
         <div class="d-grid gap-2">
             <button class="btn btn-danger btn-lg w-100" data-bs-toggle="modal" data-bs-target="#orderModal">
                 Mua ngay
