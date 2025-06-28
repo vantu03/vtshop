@@ -91,7 +91,7 @@ class Promotion(models.Model):
     )
 
     name = models.CharField(max_length=255)
-    code = models.CharField(max_length=50, unique=True, blank=True, null=True, help_text="Mã giảm giá (nếu cần nhập)")
+    code = models.CharField(max_length=50, unique=True, blank=True, null=True)
 
     discount_type = models.CharField(max_length=10, choices=DISCOUNT_TYPE_CHOICES)
     discount_value = models.DecimalField(max_digits=10, decimal_places=2)
@@ -99,7 +99,7 @@ class Promotion(models.Model):
     max_discount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     min_order_value = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
-    users = models.ManyToManyField(User, blank=True, help_text="Để trống nếu áp dụng cho tất cả người dùng")
+    users = models.ManyToManyField(User, blank=True)
     products = models.ManyToManyField('Product', blank=True)
     categories = models.ManyToManyField('Category', blank=True)
 
@@ -149,22 +149,20 @@ class Promotion(models.Model):
 
         return max(price - discount, 0)
 
-class Review(models.Model):
-    REVIEW_TYPE_CHOICES = (
+class ProductContent(models.Model):
+    CONTENT_TYPE_CHOICES = (
         ('intro', 'Giới thiệu sản phẩm'),
         ('info', 'Thông tin chi tiết'),
         ('guide', 'Hướng dẫn sử dụng'),
-        ('review', 'Đánh giá từ người dùng'),
     )
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='contents')
     content = models.TextField()
-    review_type = models.CharField(
+    content_type = models.CharField(
         max_length=20,
-        choices=REVIEW_TYPE_CHOICES,
-        default='review',
+        choices=CONTENT_TYPE_CHOICES,
+        default='info',
     )
-
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -172,4 +170,18 @@ class Review(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.review_type} ({self.get_review_type_display()})"
+        return f"{self.content_type} ({self.get_content_type_display()})"
+
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    rating = models.PositiveSmallIntegerField(choices=[(i, f'{i} sao') for i in range(1, 6)])
+    comment = models.TextField()
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.rating}sao - {self.product.name}"

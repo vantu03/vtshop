@@ -19,7 +19,7 @@
         "@type": "Offer",
         "url": "{{ SITE_DOMAIN }}{{ request.path }}",
         "priceCurrency": "VND",
-        "price": "{{ variant.price }}",
+        "price": {{ variant.price }},
         "availability": "https://schema.org/InStock"
     }
 }
@@ -231,8 +231,6 @@
     });
 </script>
 {% endif %}
-
-
 
 {% endblock %}
 

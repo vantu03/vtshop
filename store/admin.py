@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Image, Product, ProductVariant, Review, Order, Promotion
+from .models import Category, Image, Product, ProductVariant, ProductContent, Order, Promotion
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -21,10 +21,10 @@ class ProductAdmin(admin.ModelAdmin):
         model = ProductVariant
         extra = 1
 
-    class ReviewInline(admin.StackedInline):
-        model = Review
+    class ProductContentInline(admin.StackedInline):
+        model = ProductContent
         extra = 0
-        fields = ('review_type', 'content', 'is_active')
+        fields = ('content_type', 'content', 'is_active')
         show_change_link = True
 
     list_display = ('name', 'category', 'is_active', 'view_count', 'average_rating', 'created_at')
@@ -32,13 +32,13 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description')
     prepopulated_fields = {'slug': ('name',)}
 
-    inlines = [ProductVariantInline, ReviewInline]
+    inlines = [ProductVariantInline, ProductContentInline]
 
 
-@admin.register(Review)
-class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('product', 'review_type', 'is_active', 'created_at')
-    list_filter = ('review_type', 'is_active', 'created_at')
+@admin.register(ProductContent)
+class ProductContentAdmin(admin.ModelAdmin):
+    list_display = ('product', 'content_type', 'is_active', 'created_at')
+    list_filter = ('content_type', 'is_active', 'created_at')
     search_fields = ('product__name', 'content')
 
 
