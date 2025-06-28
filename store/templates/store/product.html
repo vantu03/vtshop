@@ -3,16 +3,6 @@
 {% block title %}{{ product.title }}{% endblock %}
 {% block meta_description %}{{ product.description|truncatechars:150 }}{% endblock %}
 
-{% block og_image %}
-    {% if product.thumbnail %}
-        {{ product.thumbnail.image.url }}
-    {% elif product.images.first %}
-        {{ product.images.first.image.url }}
-    {% else %}
-        {% static 'banner.png' %}
-    {% endif %}
-{% endblock %}
-
 {% block extra_head %}
 <script type="application/ld+json">
 {
@@ -88,6 +78,9 @@
     <div class="col-md-5 p-4 bg-white shadow-sm" itemscope itemtype="https://schema.org/Product">
         <meta itemprop="sku" content="{{ product.id }}">
         <meta itemprop="name" content="{{ product.name }}">
+        <meta itemprop="image" content="{{ og_image }}">
+        <meta itemprop="price" content="{{ variant.price }}">
+
         {% load format_filters %}
 
         <div class="p-3 bg-light border rounded d-inline-block mb-3 w-100" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
@@ -96,7 +89,7 @@
 
             <span class="text-danger h4 fw-bold d-flex align-items-center mb-0">
                 <i class="bi bi-tag-fill me-2"></i>
-                <span itemprop="price">{{ variant.price|currency }}</span>
+                <span>{{ variant.price|currency }}</span>
             </span>
         </div>
         {% if product.variants.count > 1 %}
