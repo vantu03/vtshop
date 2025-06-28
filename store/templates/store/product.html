@@ -126,13 +126,13 @@
 
     </div>
 
-    {% for review in product.reviews.all %}
-        {% if review.is_active %}
+    {% for content in product.contents.all %}
+        {% if content.is_active %}
             <div class="bg-white shadow-sm p-4 mt-4" >
                 <h2 class="fw-bold text-primary">
-                    {{ review.get_review_type_display }} {{ product.name }}
+                    {{ content.get_content_type_display }} {{ product.name }}
                 </h2>
-                <div class="mt-2">{{ review.content|safe }}</div>
+                <div class="mt-2">{{ content.content|safe }}</div>
             </div>
         {% endif %}
     {% endfor %}
