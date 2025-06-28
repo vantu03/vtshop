@@ -13,6 +13,7 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': {
         'products': views.ProductSitemap,
     }}, name='sitemap'),
+    path("robots.txt", views.robots_txt),
 ]
 
 if settings.DEBUG:

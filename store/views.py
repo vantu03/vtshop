@@ -1,8 +1,9 @@
+from django.conf import settings
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Product, Order, ProductVariant
-
+from django.http import HttpResponse
 from django.contrib.sitemaps import Sitemap
 from django.http import JsonResponse
 from .utils import normalize_and_validate_phone
@@ -140,3 +141,18 @@ class ProductSitemap(Sitemap):
 
     def location(self, obj):
         return f"/product/{obj.slug}/"
+
+def robots_txt(request):
+    lines = [
+        "User-agent: *",
+
+        # Ngăn bot crawl các phần không nên index
+        "Disallow: /admin/",
+        "Disallow: /cart/",
+        "Disallow: /order/",
+        "Disallow: /*?*",
+
+        # Sitemap (cực kỳ quan trọng)
+        f"Sitemap: {settings.SITE_DOMAIN}/sitemap.xml"
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
