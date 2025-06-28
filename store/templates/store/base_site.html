@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
+    <title>{% block title %}{{ SITE_NAME }} - {{ BRAND_SLOGAN }}{% endblock %}</title>
 
     <!-- SEO -->
     <meta name="description" content="{% block meta_description %}{{ SITE_DESCRIPTION }}{% endblock %}">
@@ -14,7 +14,7 @@
     <link rel="canonical" href="{{ SITE_DOMAIN }}{{ request.path }}">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="{% block og_title %}{{ META_OG_TITLE }}{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}{{ META_OG_TITLE }} - {{ BRAND_SLOGAN }}{% endblock %}">
     <meta property="og:description" content="{% block og_description %}{{ META_OG_DESCRIPTION }}{% endblock %}">
     <meta property="og:url" content="{{ SITE_DOMAIN }}{{ request.path }}">
     <meta property="og:image" content="{{ og_image|default:META_OG_IMAGE }}">
@@ -22,7 +22,7 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="{{ META_TWITTER_HANDLE }}">
-    <meta name="twitter:title" content="{% block twitter_title %}{{ META_OG_TITLE }}{% endblock %}">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ META_OG_TITLE }} - {{ BRAND_SLOGAN }}{% endblock %}">
     <meta name="twitter:description" content="{% block twitter_description %}{{ META_OG_DESCRIPTION }}{% endblock %}">
     <meta name="twitter:image" content="{{ og_image|default:META_OG_IMAGE }}">
 
