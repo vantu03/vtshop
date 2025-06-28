@@ -22,21 +22,24 @@ def product_view(request, slug):
 
 
         images = []
-        
+
+        seen_urls = set()
         if variant:
             for img in variant.images.all():
-                if img not in images:
+                if img.image.url not in seen_urls:
                     images.append({
                         'url': img.image.url,
                         'alt_text': img.alt_text,
                     })
+                    seen_urls.add(img.image.url)
 
         for img in product.images.all():
-            if img not in images:
+            if img.image.url not in seen_urls:
                 images.append({
                     'url': img.image.url,
                     'alt_text': img.alt_text,
                 })
+                seen_urls.add(img.image.url)
 
         if request.method == 'POST':
             last_name = request.POST.get('last_name', '').strip()
