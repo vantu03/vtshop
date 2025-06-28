@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.contrib.sitemaps.views import sitemap
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -9,6 +10,9 @@ urlpatterns = [
     path('products/', views.products_view, name='products'),
     path('cart/', views.cart_view, name='cart'),
     path('get/variant/<int:variant_id>/', views.get_variant, name='get_variant'),
+    path('sitemap.xml', sitemap, {'sitemaps': {
+        'products': views.ProductSitemap,
+    }}, name='sitemap'),
 ]
 
 if settings.DEBUG:

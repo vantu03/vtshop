@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Product, Order, ProductVariant
 import re
+from django.contrib.sitemaps import Sitemap
 from django.http import JsonResponse
 
 def home_view(request):
@@ -91,3 +92,16 @@ def get_variant(request, variant_id):
         })
     except ProductVariant.DoesNotExist:
         return JsonResponse({'error': 'Không tìm thấy biến thể.'}, status=404)
+
+class ProductSitemap(Sitemap):
+    changefreq = "weekly"
+    priority = 0.9
+
+    def items(self):
+        return Product.objects.filter(is_active=True)
+
+    def lastmod(self, obj):
+        return obj.updated_at
+
+    def location(self, obj):
+        return f"/product/{obj.slug}/"
