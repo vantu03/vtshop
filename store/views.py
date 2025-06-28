@@ -15,10 +15,28 @@ def product_view(request, slug):
     product = Product.objects.filter(slug=slug).first()
 
     if product:
-        
+
         product.view_count += 1
         product.save(update_fields=['view_count'])
         variant = product.get_variant(request.GET.get("variant"))
+
+
+        images = []
+        
+        if variant:
+            for img in variant.images.all():
+                if img not in images:
+                    images.append({
+                        'url': img.image.url,
+                        'alt_text': img.alt_text,
+                    })
+
+        for img in product.images.all():
+            if img not in images:
+                images.append({
+                    'url': img.image.url,
+                    'alt_text': img.alt_text,
+                })
 
         if request.method == 'POST':
             last_name = request.POST.get('last_name', '').strip()
@@ -68,6 +86,7 @@ def product_view(request, slug):
         return render(request, 'store/product.html', {
             'product': product,
             'variant': variant,
+            'images': images,
         })
 
     return render(request, '404.html', status=404)

@@ -10,8 +10,8 @@
   "@type": "Product",
   "name": "{{ product.name|escapejs }}",
   "image": [
-    {% for img in product.images.all %}
-      "{{ img.image.url }}"{% if not forloop.last %},{% endif %}
+    {% for img in images %}
+      "{{ img.url }}"{% if not forloop.last %},{% endif %}
     {% endfor %}
   ],
   "description": "{{ product.description|striptags|escapejs }}",
@@ -33,19 +33,19 @@
     <h1 class="fw-bold py-1">{{ product.name }}</h1>
     <!-- Ảnh sản phẩm -->
     <div class="col-md-7 p-4 bg-white shadow-sm">
-        {% if variant.images.count > 0 %}
+        {% if images.count > 0 %}
             <!-- Carousel chứa toàn bộ ảnh -->
             <div id="productCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    {% for img in variant.images.all %}
+                    {% for img in images %}
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                        <img src="{{ img.image.url }}"
+                        <img src="{{ img.url }}"
                              class="d-block w-100 rounded"
                              style="height: 250px; object-fit: contain; cursor: pointer;"
                              alt="{{ img.alt_text }}"
                              data-bs-toggle="modal"
                              data-bs-target="#imageModal"
-                             data-img-url="{{ img.image.url }}">
+                             data-img-url="{{ img.url }}">
                     </div>
                     {% endfor %}
                 </div>
@@ -63,8 +63,8 @@
             <!-- Ảnh nhỏ điều khiển carousel -->
             <div class="py-1">
                 <div class="d-flex justify-content-center gap-2 flex-wrap">
-                    {% for img in variant.images.all %}
-                    <img src="{{ img.image.url }}" alt="{{ img.alt_text }}"
+                    {% for img in images %}
+                    <img src="{{ img.url }}" alt="{{ img.alt_text }}"
                          class="img-thumbnail"
                          style="width: 50px; height: 50px; object-fit: cover; cursor: pointer;"
                          data-bs-target="#productCarousel"
