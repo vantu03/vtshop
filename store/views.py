@@ -20,7 +20,7 @@ def product_view(request, slug):
         product.save(update_fields=['view_count'])
         variant = product.get_variant(request.GET.get("variant"))
 
-        variant_images = variant.images.all().order_by('id') if variant else []
+        variant_images = variant.images.all().order_by('-id') if variant else []
 
         if request.method == 'POST':
             last_name = request.POST.get('last_name', '').strip()
