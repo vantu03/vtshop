@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Image, Product, ProductVariant, ProductContent, Order, Promotion
+from .models import Category, Image, Product, ProductVariant, ProductContent, Order, Promotion, Review
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -54,3 +54,12 @@ class PromotionAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'discount_type', 'discount_value', 'is_active', 'start_date', 'end_date')
     list_filter = ('is_active', 'discount_type', 'start_date', 'end_date')
     search_fields = ('name', 'code')
+
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('product', 'user', 'rating', 'is_active', 'created_at')
+    list_filter = ('rating', 'is_active', 'created_at')
+    search_fields = ('product__name', 'user__username', 'comment')
+    autocomplete_fields = ('product', 'user')
+    readonly_fields = ('created_at',)
