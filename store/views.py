@@ -41,6 +41,15 @@ def product_view(request, slug):
                 })
                 seen_urls.add(img.image.url)
 
+        if product.thumbnail:
+            og_image = product.thumbnail.image.url
+        elif variant and variant.images.exists():
+            og_image = variant.images.first().image.url
+        elif images:
+            og_image = images[0]['url']
+        else:
+            og_image = None
+
         if request.method == 'POST':
             last_name = request.POST.get('last_name', '').strip()
             first_name = request.POST.get('first_name', '').strip()
@@ -90,6 +99,7 @@ def product_view(request, slug):
             'product': product,
             'variant': variant,
             'images': images,
+            "og_image": og_image,
         })
 
     return render(request, '404.html', status=404)

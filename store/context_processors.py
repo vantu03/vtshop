@@ -12,6 +12,7 @@ def vtshop_context(request):
         # Mạng xã hội / SEO
         'META_OG_TITLE': settings.META_OG_TITLE,
         'META_OG_DESCRIPTION': settings.META_OG_DESCRIPTION,
+        'META_OG_IMAGE': settings.META_OG_IMAGE,
         'META_TWITTER_HANDLE': settings.META_TWITTER_HANDLE,
 
         # Thương hiệu

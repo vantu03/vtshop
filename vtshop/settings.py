@@ -20,6 +20,7 @@ SITE_AUTHOR = config('SITE_AUTHOR')
 # ========== Mạng xã hội / Metadata ==========
 META_OG_TITLE = config('META_OG_TITLE')
 META_OG_DESCRIPTION = config('META_OG_DESCRIPTION')
+META_OG_IMAGE = config('META_OG_IMAGE')
 META_TWITTER_HANDLE = config('META_TWITTER_HANDLE')
 
 # ========== Thương hiệu ==========
