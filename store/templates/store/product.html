@@ -27,6 +27,14 @@
 {% endblock %}
 {% block content %}
 
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Trang chủ</a></li>
+        <li class="breadcrumb-item">{{ product.category_name }}</li>
+    </ol>
+</nav>
+
+
 <section class="row">
     <!-- Tiêu đề sản phẩm -->
     <h1 class="fw-bold py-1">{{ product.name }}</h1>
