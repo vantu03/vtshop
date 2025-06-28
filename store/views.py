@@ -15,9 +15,12 @@ def product_view(request, slug):
     product = Product.objects.filter(slug=slug).first()
 
     if product:
+
         product.view_count += 1
         product.save(update_fields=['view_count'])
         variant = product.get_variant(request.GET.get("variant"))
+
+        variant_images = variant.images.all().order_by('id') if variant else []
 
         if request.method == 'POST':
             last_name = request.POST.get('last_name', '').strip()
@@ -67,6 +70,7 @@ def product_view(request, slug):
         return render(request, 'store/product.html', {
             'product': product,
             'variant': variant,
+            'variant_images': variant_images,
         })
 
     return render(request, '404.html', status=404)
