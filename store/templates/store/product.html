@@ -96,7 +96,7 @@
             <div class="mb-3">
                 <div class="d-flex flex-wrap gap-2 mt-1">
                     {% for v in product.variants.all %}
-                        <a class="btn btn-outline-secondary rounded-pill
+                        <a class="btn btn-outline-primary rounded-pill
                                   {% if v == variant %} active bg-primary bg-opacity-25 text-dark border-primary {% endif %}"
                            href="{% url 'product' slug=product.slug %}?variant={{ v.id }}">
                             {{ v.name|safe }}
