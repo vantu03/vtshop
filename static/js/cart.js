@@ -133,8 +133,6 @@ class CartManager {
 
         // Chờ tất cả request xong mới update tổng tiền
         Promise.all(promises).then(() => this.update());
-
-        console.log('den day');
     }
 
     update() {
@@ -154,7 +152,7 @@ class CartManager {
         this.cartTotalEl.textContent = `Tạm tính: ${total.toLocaleString()}₫`;
 
         this.hasCartEl.style.display = this.cart.length > 0 ? 'block' : 'none';
-        this.emptyCartMessage.style.display = hasItems ? 'none' : 'block';
+        this.emptyCartMessage.style.display = this.cart.length > 0 ? 'none' : 'block';
 
         localStorage.setItem('cart', JSON.stringify(this.cart));
     }
