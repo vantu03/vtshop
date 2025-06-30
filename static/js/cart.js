@@ -1,6 +1,7 @@
 class CartManager {
     constructor() {
         this.cart = [];
+        this.hasCartEl = document.getElementById('hasCart');
         this.cartContainer = document.getElementById('cartContainer');
         this.emptyCartMessage = document.getElementById('emptyCartMessage');
         this.cartTotalEl = document.getElementById('cartTotal');
@@ -150,13 +151,12 @@ class CartManager {
 
         this.cartTotalEl.textContent = `Tạm tính: ${total.toLocaleString()}₫`;
 
-        if (this.cart.length === 0) {
-            this.cartContainer.style.display = 'none';
-            this.emptyCartMessage.style.display = 'block';
-        }
+        this.hasCartEl.style.display = this.cart.length > 0 ? 'block' : 'none';
+        this.emptyCartMessage.style.display = hasItems ? 'none' : 'block';
 
         localStorage.setItem('cart', JSON.stringify(this.cart));
     }
+
 }
 
 document.addEventListener('DOMContentLoaded', () => {

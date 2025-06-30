@@ -14,21 +14,24 @@
 
 <h1 class="fw-bold mb-4">Giỏ hàng của bạn</h1>
 
-<div id="cartContainer" class="vstack gap-3">
+<!-- Khi có hàng -->
+<div id="hasCart" style="display: none;">
+    <div id="cartContainer" class="vstack gap-3"></div>
 
-    <!-- Nút Mua hàng -->
-    <div class="text-end mt-4">
+    <div id="cartActions" class="text-end mt-4">
+        <div id="cartTotal" class="fs-5 fw-bold text-danger mb-3"></div>
         <button class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#checkoutModal">
             <i class="bi bi-bag-check-fill me-2"></i> Mua hàng
         </button>
     </div>
 </div>
+
+<!-- Khi không có hàng -->
 <div id="emptyCartMessage" class="text-center text-muted" style="display: none;">
     <i class="bi bi-cart-x fs-1"></i>
     <p class="mt-2">Chưa có sản phẩm nào trong giỏ hàng.</p>
     <a href="{% url 'home' %}" class="btn btn-primary mt-2">Tiếp tục mua sắm</a>
 </div>
-<div id="cartTotal" class="text-end fs-5 fw-bold text-danger mt-3"></div>
 
 <!-- Modal đặt hàng -->
 <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
@@ -101,6 +104,6 @@
     </div>
 </div>
 
-<script src="{% static 'js/cart.js' %}"></script>
+<script src="{% static 'js/cart.js' %}?v={{ STATIC_VERSION }}"></script>
 {% endblock %}
 

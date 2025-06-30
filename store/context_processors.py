@@ -8,6 +8,8 @@ def vtshop_context(request):
         'SITE_DESCRIPTION': settings.SITE_DESCRIPTION,
         'SITE_KEYWORDS': settings.SITE_KEYWORDS,
         'SITE_AUTHOR': settings.SITE_AUTHOR,
+        'SITE_VERSION': settings.SITE_VERSION,
+        'STATIC_VERSION': settings.SITE_VERSION,
 
         # Mạng xã hội / SEO
         'META_OG_TITLE': settings.META_OG_TITLE,

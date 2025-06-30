@@ -16,6 +16,7 @@ SITE_DOMAIN = config('SITE_DOMAIN')
 SITE_DESCRIPTION = config('SITE_DESCRIPTION')
 SITE_KEYWORDS = config('SITE_KEYWORDS')
 SITE_AUTHOR = config('SITE_AUTHOR')
+SITE_VERSION = config('SITE_VERSION')
 
 # ========== Mạng xã hội / Metadata ==========
 META_OG_TITLE = config('META_OG_TITLE')
