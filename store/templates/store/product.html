@@ -95,7 +95,7 @@
         </div>
         {% if product.variants.count > 1 %}
             <div class="mb-3">
-                <div class="d-flex flex-wrap gap-2 mt-1">
+                <div class="d-flex flex-column gap-2 mt-1 overflow-y-auto" style="max-height: 200px;">
                     {% for v in product.variants.all %}
                         <a class="btn border-secondary rounded-pill
                                    {% if v == variant %} active bg-primary bg-opacity-10 text-primary border-primary {% endif %}"
