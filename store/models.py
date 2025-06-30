@@ -97,14 +97,31 @@ class ProductVariant(models.Model):
         return f"{self.name} - {self.product.name}"
 
 class Order(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Chờ duyệt'),
+        ('confirmed', 'Đã xác nhận'),
+        ('paid', 'Đã thanh toán'),
+        ('shipped', 'Đã giao hàng'),
+        ('delivered', 'Đã nhận hàng'),
+        ('cancelled', 'Đã hủy'),
+    ]
+
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+
+    full_name = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=20)
+    email = models.EmailField(blank=True)
     address = models.TextField()
+
     note = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    is_processed = models.BooleanField(default=False)
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
 
     def __str__(self):
-        return f"Order #{self.pk} - {self.user.username}"
+        return f"Order #{self.pk} - {self.full_name} ({self.get_status_display()})"
+
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')

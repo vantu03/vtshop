@@ -14,19 +14,21 @@
 
 <h1 class="fw-bold mb-4">Giỏ hàng của bạn</h1>
 
-<div id="cartContainer" class="vstack gap-3"></div>
+<div id="cartContainer" class="vstack gap-3">
+
+    <!-- Nút Mua hàng -->
+    <div class="text-end mt-4">
+        <button class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#checkoutModal">
+            <i class="bi bi-bag-check-fill me-2"></i> Mua hàng
+        </button>
+    </div>
+</div>
 <div id="emptyCartMessage" class="text-center text-muted" style="display: none;">
     <i class="bi bi-cart-x fs-1"></i>
     <p class="mt-2">Chưa có sản phẩm nào trong giỏ hàng.</p>
     <a href="{% url 'home' %}" class="btn btn-primary mt-2">Tiếp tục mua sắm</a>
 </div>
 <div id="cartTotal" class="text-end fs-5 fw-bold text-danger mt-3"></div>
-<!-- Nút Mua hàng -->
-<div class="text-end mt-4">
-    <button class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#checkoutModal">
-        <i class="bi bi-bag-check-fill me-2"></i> Mua hàng
-    </button>
-</div>
 
 <!-- Modal đặt hàng -->
 <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
@@ -41,19 +43,20 @@
             <div class="modal-body">
                 <form id="checkoutForm">
                     <div class="mb-3">
-                        <label class="form-label">Họ</label>
-                        <input type="text" class="form-control" name="last_name" required>
+                        <label class="form-label">Họ tên (Bắt buộc)</label>
+                        <input type="text" class="form-control" name="full_name" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Tên</label>
-                        <input type="text" class="form-control" name="first_name" required>
+                        <label class="form-label">Số điện thoại (Bắt buộc)</label>
+                        <input type="tel" class="form-control" name="phone_number" required pattern="[0-9]{9,11}">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Số điện thoại</label>
-                        <input type="tel" class="form-control" name="phone" required pattern="[0-9]{9,11}">
+                        <label class="form-label">Email (tuỳ chọn)</label>
+                        <input type="email" class="form-control" name="email">
                     </div>
+
                     <div class="mb-3">
-                        <label class="form-label">Địa chỉ</label>
+                        <label class="form-label">Địa chỉ (Bắt buộc)</label>
                         <textarea class="form-control" name="address" rows="2" required></textarea>
                     </div>
                     <div class="mb-3">

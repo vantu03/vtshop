@@ -43,11 +43,11 @@ class ProductContentAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('user', 'is_processed', 'created_at')
-    list_filter = ('is_processed', 'created_at')
-    search_fields = ('user__username', 'address', 'note')
-
-    inlines = []
+    list_display = ('id', 'full_name', 'phone_number', 'status', 'created_at')
+    list_filter = ('status', 'created_at')
+    search_fields = ('full_name', 'phone_number', 'email', 'address', 'note')
+    list_editable = ('status',)
+    readonly_fields = ('created_at',)
 
     class OrderItemInline(admin.TabularInline):
         model = OrderItem
@@ -55,7 +55,6 @@ class OrderAdmin(admin.ModelAdmin):
         readonly_fields = ('variant', 'quantity')
 
     inlines = [OrderItemInline]
-
 
 @admin.register(Promotion)
 class PromotionAdmin(admin.ModelAdmin):

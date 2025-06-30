@@ -120,36 +120,28 @@ def submit_cart_order(request):
         try:
             data = json.loads(request.body)
 
-            # Validate thông tin cá nhân
-            last_name = data.get('last_name', '').strip()
-            first_name = data.get('first_name', '').strip()
-            phone = normalize_and_validate_phone(data.get('phone', '').strip())
+            # Lấy và kiểm tra dữ liệu
+            full_name = data.get('full_name', '').strip()
+            phone_number = normalize_and_validate_phone(data.get('phone_number', '').strip())
+            email = data.get('email', '').strip()
             address = data.get('address', '').strip()
             note = data.get('note', '').strip()
-
-            if not all([last_name, first_name, phone, address]):
-                return JsonResponse({'error': 'Thiếu thông tin bắt buộc.'}, status=400)
-
             items = data.get('items', [])
-            if not items:
-                return JsonResponse({'error': 'Giỏ hàng trống.'}, status=400)
 
-            # Tạo user ẩn danh theo số điện thoại
-            user, created = User.objects.get_or_create(username=phone)
-            if created:
-                user.first_name = first_name
-                user.last_name = last_name
-                user.set_unusable_password()
-                user.save()
+            if not all([full_name, phone_number, address]) or not items:
+                return JsonResponse({'error': 'Thiếu thông tin hoặc giỏ hàng trống.'}, status=400)
 
             # Tạo đơn hàng
             order = Order.objects.create(
-                user=user,
+                user=request.user if request.user.is_authenticated else None,
+                full_name=full_name,
+                phone_number=phone_number,
+                email=email,
                 address=address,
                 note=note
             )
 
-            # Tạo các item trong đơn hàng
+            # Lưu các item trong đơn
             for item in items:
                 variant_id = item.get('variant_id')
                 quantity = item.get('quantity', 1)

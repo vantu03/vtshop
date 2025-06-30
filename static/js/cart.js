@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(this);
         const data = Object.fromEntries(formData.entries());
 
-        if (!formData.get('last_name') || !formData.get('first_name') || !formData.get('phone') || !formData.get('address')) {
+        if (!formData.get('full_name') || !formData.get('phone_number') || !formData.get('address')) {
             return;
         }
 
@@ -184,9 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     'X-CSRFToken': getCookie('csrftoken')
                 },
                 body: JSON.stringify({
-                    last_name: formData.get('last_name'),
-                    first_name: formData.get('first_name'),
-                    phone: formData.get('phone'),
+                    full_name: formData.get('full_name'),
+                    phone_number: formData.get('phone_number'),
+                    email: formData.get('email'),
                     address: formData.get('address'),
                     note: formData.get('note'),
                     items: cartManager.cart,
