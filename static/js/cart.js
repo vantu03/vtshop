@@ -128,7 +128,10 @@ class CartManager {
                 xhr.send();
             });
 
+
+            console.log('Den day');
             promises.push(promise);
+            console.log('Giai phong');
         }
 
         // Chờ tất cả request xong mới update tổng tiền
@@ -136,6 +139,7 @@ class CartManager {
     }
 
     update() {
+        console.log('Den day');
         let total = 0;
         this.cart.forEach(item => {
             if (item.quantity < 1) item.quantity = 1;
