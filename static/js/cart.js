@@ -133,6 +133,8 @@ class CartManager {
 
         // Chờ tất cả request xong mới update tổng tiền
         Promise.all(promises).then(() => this.update());
+
+        console.log('den day');
     }
 
     update() {
