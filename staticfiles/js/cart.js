@@ -15,7 +15,7 @@ class CartManager {
 
         for (let item of this.cart) {
             const wrapper = document.createElement('div');
-            wrapper.className = 'd-flex bg-white shadow-sm p-3 rounded align-items-center justify-content-between flex-wrap gap-3';
+            wrapper.className = 'bg-white shadow-sm p-3 rounded';
             wrapper.dataset.variantId = item.variant_id;
             this.cartContainer.appendChild(wrapper);
 
@@ -27,6 +27,9 @@ class CartManager {
                         if (xhr.status === 200) {
                             const data = JSON.parse(xhr.responseText);
                             wrapper.dataset.price = data.price;
+
+                            const containerInfo = document.createElement('div');
+                            containerInfo.className = 'd-flex';
 
                             const img = document.createElement('img');
                             img.src = data.thumbnail;
@@ -62,7 +65,7 @@ class CartManager {
                             qtyGroup.style = 'width: 120px;';
 
                             const minusBtn = document.createElement('button');
-                            minusBtn.className = 'btn btn-outline-secondary';
+                            minusBtn.className = 'btn btn-outline-primary';
                             minusBtn.type = 'button';
                             minusBtn.textContent = '−';
 
@@ -74,19 +77,26 @@ class CartManager {
                             qtyInput.dataset.variantId = item.variant_id;
 
                             const plusBtn = document.createElement('button');
-                            plusBtn.className = 'btn btn-outline-secondary';
+                            plusBtn.className = 'btn btn-outline-primary';
                             plusBtn.type = 'button';
                             plusBtn.textContent = '+';
 
-                            qtyGroup.append(minusBtn, qtyInput, plusBtn);
-
-                            const removeBtn = document.createElement('button');
-                            removeBtn.className = 'btn btn-sm btn-outline-danger';
-                            removeBtn.innerHTML = '<i class="bi bi-trash"></i> Xoá';
+                            const removeBtn = document.createElement('a');
+                            removeBtn.href = 'javascript:void(0)';
+                            removeBtn.className = 'text-danger text-decoration-none';
+                            removeBtn.innerHTML = 'Xóa sản phẩm';
                             removeBtn.dataset.variantId = item.variant_id;
 
-                            right.append(price, qtyGroup, removeBtn);
-                            wrapper.append(img, info, right);
+                            qtyGroup.append(minusBtn, qtyInput, plusBtn);
+
+                            const actionRow = document.createElement('div');
+                            actionRow.className = 'd-flex justify-content-end align-items-center gap-2 mb-2';
+                            actionRow.append(qtyGroup);
+
+                            right.append(actionRow, price);
+
+                            containerInfo.append(img, info);
+                            wrapper.append(containerInfo, right, removeBtn);
 
                             plusBtn.onclick = () => {
                                 item.quantity += 1;
