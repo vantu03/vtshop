@@ -6,9 +6,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.home_view, name='home'),
-    path('product/<slug:slug>/', views.product_view, name='product'),
-    path('products/', views.products_view, name='products'),
-    path('products/<slug:slug>/', views.products_view, name='products'),
     path('cart/', views.cart_view, name='cart'),
     path('get/variant/<int:variant_id>/', views.get_variant, name='get_variant'),
     path('sitemap.xml', sitemap, {'sitemaps': {
@@ -16,6 +13,8 @@ urlpatterns = [
     }}, name='sitemap'),
     path("robots.txt", views.robots_txt),
     path('order/submit/', views.submit_cart_order, name="order_submit"),
+    path('<slug:category_slug>/<slug:product_slug>/', views.product_detail_view, name='product_detail'),
+    path('<slug:category_slug>/', views.category_products_view, name='category_products'),
 ]
 
 if settings.DEBUG:

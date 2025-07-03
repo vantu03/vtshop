@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.contrib.auth.models import User
-from .models import Product, Order, ProductVariant, Star, OrderItem
+from .models import Product, Order, ProductVariant, Star, OrderItem, Category
 from django.http import HttpResponse
 from django.contrib.sitemaps import Sitemap
 from django.http import JsonResponse
@@ -14,59 +14,62 @@ def home_view(request):
     products = Product.objects.filter(is_active=True).order_by('-created_at')[:10]
     return render(request, 'store/home.html', {'products': products})
 
-def product_view(request, slug):
+def product_detail_view(request, category_slug, product_slug):
+    product = Product.objects.filter(
+        slug=product_slug,
+        category__slug=category_slug,
+        is_active=True
+    ).first()
 
-    product = Product.objects.filter(slug=slug).first()
+    if not product:
+        return render(request, '404.html', status=404)
 
-    if product:
+    product.view_count += 1
+    product.save(update_fields=['view_count'])
+    variant = product.get_variant(request.GET.get("variant"))
 
-        product.view_count += 1
-        product.save(update_fields=['view_count'])
-        variant = product.get_variant(request.GET.get("variant"))
-
-        images = []
-
-        seen_urls = set()
-        if variant:
-            for img in variant.images.all():
-                if img.image.url not in seen_urls:
-                    images.append({
-                        'url': img.image.url,
-                        'alt_text': img.alt_text,
-                    })
-                    seen_urls.add(img.image.url)
-
-        for img in product.images.all():
+    images = []
+    seen_urls = set()
+    if variant:
+        for img in variant.images.all():
             if img.image.url not in seen_urls:
-                images.append({
-                    'url': img.image.url,
-                    'alt_text': img.alt_text,
-                })
+                images.append({'url': img.image.url, 'alt_text': img.alt_text})
                 seen_urls.add(img.image.url)
 
-        if product.thumbnail:
-            og_image = product.thumbnail.image.url
-        elif variant and variant.images.exists():
-            og_image = variant.images.first().image.url
-        elif images:
-            og_image = images[0]['url']
-        else:
-            og_image = None
+    for img in product.images.all():
+        if img.image.url not in seen_urls:
+            images.append({'url': img.image.url, 'alt_text': img.alt_text})
+            seen_urls.add(img.image.url)
 
+    if product.thumbnail:
+        og_image = product.thumbnail.image.url
+    elif variant and variant.images.exists():
+        og_image = variant.images.first().image.url
+    elif images:
+        og_image = images[0]['url']
+    else:
+        og_image = None
 
-        return render(request, 'store/product.html', {
-            'product': product,
-            'variant': variant,
-            'images': images,
-            "og_image": og_image,
-            "stars": Star.objects.all().order_by('star')
-        })
+    return render(request, 'store/product.html', {
+        'product': product,
+        'variant': variant,
+        'images': images,
+        'og_image': og_image,
+        'stars': Star.objects.all().order_by('star')
+    })
 
-    return render(request, '404.html', status=404)
+def category_products_view(request, category_slug=None):
+    category = None
 
-def products_view(request):
-    products = Product.objects.filter(is_active=True).order_by('-created_at')
-    return render(request, 'store/products.html', {'products': products})
+    if category_slug:
+        category = Category.objects.filter(slug=category_slug).first()
+        if not category:
+            return render(request, '404.html', status=404)
+        products = Product.objects.filter(is_active=True, category=category).order_by('-created_at')
+    else:
+        products = Product.objects.filter(is_active=True).order_by('-created_at')
+
+    return render(request, 'store/products.html', {'products': products, 'category': category})
 
 def cart_view(request):
     return render(request, 'store/cart.html', )
@@ -97,7 +100,7 @@ class ProductSitemap(Sitemap):
         return obj.updated_at
 
     def location(self, obj):
-        return f"/product/{obj.slug}/"
+        return obj.get_full_slug()
 
 def robots_txt(request):
     lines = [

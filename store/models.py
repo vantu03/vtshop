@@ -92,6 +92,10 @@ class Product(models.Model):
             'stars': stars,
         }
 
+    def get_full_slug(self):
+        return f"/{self.category.slug}/{self.slug}"
+
+
 class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='variants')
     name = models.CharField(max_length=500)

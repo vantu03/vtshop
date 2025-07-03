@@ -101,11 +101,6 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'products' %}">
-                                <i class="bi bi-box-seam"></i> Sản phẩm
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'cart' %}">
                                 <i class="bi bi-cart"></i> Giỏ hàng
                             </a>
@@ -122,7 +117,7 @@
     <div class="py-2 border-top border-bottom bg-light">
         <div class="container d-flex flex-wrap gap-2 justify-content-start">
             {% for cat in header_categories %}
-                <a href="{% url 'products' cat.slug %}"
+                <a href="/{{ cat.slug }}"
                    class="py-2 px-3 text-dark text-decoration-none d-flex align-items-center gap-2 fw-semibold rounded hover-bg">
                     <img src="{{ cat.icon.image.url }}" alt="{{ cat.name }}" width="24" height="24">
                     {{ cat.name }}

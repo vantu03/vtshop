@@ -5,7 +5,7 @@
 <div class="d-flex flex-wrap gap-3 justify-content-start">
     {% load format_filters %}
     {% for product in products %}
-    <a href="{% url 'product' slug=product.slug %}" class="text-decoration-none text-dark">
+    <a href="{% url 'product_detail' category_slug=product.category.slug product_slug=product.slug %}" class="text-decoration-none text-dark">
         <div class="card shadow-sm border-0 p-2" style="width: 180px; height: 320px;">
             <img src="{{ product.thumbnail.image.url }}" class="card-img-top"
                  style="width: 100%; height: 180px; object-fit: contain;"

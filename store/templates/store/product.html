@@ -103,7 +103,7 @@
                     {% for v in product.variants.all %}
                         <a class="btn border-secondary rounded-pill
                                    {% if v == variant %} active bg-primary bg-opacity-10 text-primary border-primary {% endif %}"
-                           href="{% url 'product' slug=product.slug %}?variant={{ v.id }}">
+                           href="{% url 'product_detail' category_slug=product.category.slug product_slug=product.slug %}?variant={{ v.id }}">
                             {{ v.name|safe }}
                         </a>
 
