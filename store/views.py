@@ -107,7 +107,6 @@ def robots_txt(request):
         "Disallow: /admin/",
         "Disallow: /cart/",
         "Disallow: /order/",
-        "Disallow: /*?*",
 
         # Sitemap (cực kỳ quan trọng)
         f"Sitemap: {settings.SITE_DOMAIN}/sitemap.xml"

@@ -115,7 +115,22 @@
                 </div>
             </div>
         </nav>
+
     </header>
+
+    <!-- THANH DANH MỤC NGANG -->
+    <div class="py-2 border-top border-bottom">
+        <div class="container d-flex flex-wrap gap-3 justify-content-start">
+            {% for cat in header_categories %}
+                <a href="{% url 'products' cat.slug %}" class="text-dark fw-semibold text-decoration-none d-flex align-items-center gap-1 px-2">
+                    <img src="{{ cat.icon.image.url }}" alt="{{ cat.name }}" width="20" height="20" class="me-1">
+                    {{ cat.name }}
+                </a>
+            {% empty %}
+                <span class="text-muted">Chưa có danh mục</span>
+            {% endfor %}
+        </div>
+    </div>
 
     <!-- Main Content -->
     <main class="container py-4">

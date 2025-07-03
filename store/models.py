@@ -4,7 +4,20 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count
 
+class Image(models.Model):
+    image = models.ImageField(upload_to='images/')
+    alt_text = models.CharField(max_length=255, blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.alt_text or self.image.name
+
 class Category(models.Model):
+    icon = models.ForeignKey(
+        Image,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True)
 
@@ -18,14 +31,6 @@ class Category(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
-
-class Image(models.Model):
-    image = models.ImageField(upload_to='images/')
-    alt_text = models.CharField(max_length=255, blank=True)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.alt_text or self.image.name
 
 class Product(models.Model):
     title = models.CharField(max_length=255)

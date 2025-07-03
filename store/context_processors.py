@@ -1,4 +1,5 @@
 from django.conf import settings
+from .models import Category
 
 def vtshop_context(request):
     return {
@@ -25,4 +26,9 @@ def vtshop_context(request):
         # Google Analytics
         'GA_TRACKING_ID': settings.GA_TRACKING_ID,
 
+    }
+
+def categories_processor(request):
+    return {
+        'header_categories': Category.objects.all()
     }
