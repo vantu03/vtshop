@@ -119,17 +119,20 @@
     </header>
 
     <!-- THANH DANH MỤC NGANG -->
-    <div class="py-2 border-top border-bottom">
-        <div class="container d-flex flex-wrap gap-3 justify-content-start">
+    <div class="py-2 border-top border-bottom bg-light">
+        <div class="container d-flex flex-wrap gap-2 justify-content-start">
             {% for cat in header_categories %}
-                <a href="{% url 'products' cat.slug %}" class="text-dark fw-semibold text-decoration-none d-flex align-items-center px-2">
-                    <img src="{{ cat.icon.image.url }}" alt="{{ cat.name }}" width="24" height="24" class="me-1">{{ cat.name }}
+                <a href="{% url 'products' cat.slug %}"
+                   class="py-2 px-3 text-dark text-decoration-none d-flex align-items-center gap-2 fw-semibold rounded hover-bg">
+                    <img src="{{ cat.icon.image.url }}" alt="{{ cat.name }}" width="24" height="24">
+                    {{ cat.name }}
                 </a>
             {% empty %}
                 <span class="text-muted">Chưa có danh mục</span>
             {% endfor %}
         </div>
     </div>
+
 
     <!-- Main Content -->
     <main class="container py-4">
