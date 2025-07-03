@@ -5,6 +5,10 @@
 
 {% block og_title %}{{ product.title }}{% endblock %}
 {% block og_description %}{{ product.description|truncatechars:150 }}{% endblock %}
+
+{% block twitter_title %}{{ product.title }}{% endblock %}
+{% block twitter_description %}{{ product.description|truncatechars:150 }}{% endblock %}
+
 {% load format_filters %}
 {% block extra_head %}
 <script type="application/ld+json">
