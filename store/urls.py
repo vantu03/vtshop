@@ -10,6 +10,7 @@ urlpatterns = [
     path('get/variant/<int:variant_id>/', views.get_variant, name='get_variant'),
     path('sitemap.xml', sitemap, {'sitemaps': {
         'products': views.ProductSitemap,
+        'categories': views.CategorySitemap,
     }}, name='sitemap'),
     path("robots.txt", views.robots_txt),
     path('order/submit/', views.submit_cart_order, name="order_submit"),

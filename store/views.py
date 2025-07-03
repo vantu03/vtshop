@@ -104,6 +104,20 @@ class ProductSitemap(Sitemap):
     def location(self, obj):
         return obj.get_full_slug()
 
+class CategorySitemap(Sitemap):
+    changefreq = "weekly"
+    priority = 0.8
+
+    def items(self):
+        return Category.objects.all()
+
+    def lastmod(self, obj):
+        return obj.updated_at
+
+    def location(self, obj):
+        return f"/{obj.slug}/"
+
+
 def robots_txt(request):
     lines = [
         "User-agent: *",
