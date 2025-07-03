@@ -10,7 +10,7 @@ from django.http import JsonResponse
 from .utils import normalize_and_validate_phone
 
 def custom_404_view(request, exception):
-    return render(request, "404.html", status=404)
+    return render(request, "store/404.html", status=404)
 
 def home_view(request):
     products = Product.objects.filter(is_active=True).order_by('-created_at')[:10]
@@ -24,7 +24,7 @@ def product_detail_view(request, category_slug, product_slug):
     ).first()
 
     if not product:
-        return render(request, '404.html', status=404)
+        return render(request, 'store/404.html', status=404)
 
     product.view_count += 1
     product.save(update_fields=['view_count'])
@@ -66,7 +66,7 @@ def category_products_view(request, category_slug=None):
     if category_slug:
         category = Category.objects.filter(slug=category_slug).first()
         if not category:
-            return render(request, '404.html', status=404)
+            return render(request, 'store/404.html', status=404)
         products = Product.objects.filter(is_active=True, category=category).order_by('-created_at')
     else:
         products = Product.objects.filter(is_active=True).order_by('-created_at')

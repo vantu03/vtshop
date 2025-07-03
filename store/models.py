@@ -20,6 +20,8 @@ class Category(models.Model):
     )
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name_plural = 'Categories'
