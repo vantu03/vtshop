@@ -34,7 +34,7 @@
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Trang chủ</a></li>
-        <li class="breadcrumb-item">{{ product.category.name }}</li>
+        <li class="breadcrumb-item"><a href="{% url 'category_products' category_slug=product.category.slug %}" class="text-decoration-none">{{ product.category.name }}</a></li>
     </ol>
 </nav>
 
