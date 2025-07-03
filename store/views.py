@@ -9,6 +9,8 @@ from django.contrib.sitemaps import Sitemap
 from django.http import JsonResponse
 from .utils import normalize_and_validate_phone
 
+def custom_404_view(request, exception):
+    return render(request, "404.html", status=404)
 
 def home_view(request):
     products = Product.objects.filter(is_active=True).order_by('-created_at')[:10]

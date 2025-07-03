@@ -5,3 +5,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('store.urls')),
 ]
+handler404 = 'store.views.custom_404_view'
