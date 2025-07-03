@@ -114,11 +114,11 @@
     </header>
 
     <!-- THANH DANH MỤC NGANG -->
-    <div class="py-2 border-top border-bottom bg-light">
-        <div class="container d-flex flex-wrap gap-2 justify-content-start">
+    <div class="py-2 border-top border-bottom bg-white">
+        <div class="container d-flex overflow-auto" style="white-space: nowrap;">
             {% for cat in header_categories %}
                 <a href="{% url 'category_products' category_slug=cat.slug %}"
-                   class="py-2 px-3 text-dark text-decoration-none d-flex align-items-center gap-2 fw-semibold rounded hover-bg">
+                   class="py-2 px-3 text-dark text-decoration-none d-flex align-items-center gap-1 fw-semibold rounded">
                     <img src="{{ cat.icon.image.url }}" alt="{{ cat.name }}" width="24" height="24">
                     {{ cat.name }}
                 </a>
