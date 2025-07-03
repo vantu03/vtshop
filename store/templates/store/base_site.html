@@ -123,7 +123,7 @@
         <div class="container d-flex flex-wrap gap-3 justify-content-start">
             {% for cat in header_categories %}
                 <a href="{% url 'products' cat.slug %}" class="text-dark fw-semibold text-decoration-none d-flex align-items-center gap-1 px-2">
-                    <img src="{{ cat.icon.image.url }}" alt="{{ cat.name }}" width="20" height="20" class="me-1">
+                    <img src="{{ cat.icon.image.url }}" alt="{{ cat.name }}" width="24" height="24" class="me-1">
                     {{ cat.name }}
                 </a>
             {% empty %}
