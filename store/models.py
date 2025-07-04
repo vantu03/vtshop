@@ -242,10 +242,10 @@ class Star(models.Model):
     def __str__(self):
         return f"{self.star} - {self.label}"
 
-
 class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    name = models.CharField(max_length=100, blank=True)
+    phone = models.CharField(max_length=20, blank=True)
     star = models.ForeignKey(Star, on_delete=models.CASCADE)
     comment = models.TextField()
     is_active = models.BooleanField(default=True)

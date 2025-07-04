@@ -44,6 +44,8 @@
 
     <!-- Custom JS -->
     <script src="{% static 'js/message.js' %}?v={{ STATIC_VERSION }}"></script>
+    <script src="{% static 'js/main.js' %}?v={{ STATIC_VERSION }}"></script>
+
 
     {% block extra_head %}{% endblock %}
 
@@ -103,6 +105,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'cart' %}">
                                 <i class="bi bi-cart"></i> Giỏ hàng
+                                <span id="cartItemCount" class="badge bg-danger rounded-pill  translate-middle small" style="display:none;">0</span>
                             </a>
                         </li>
                     </ul>

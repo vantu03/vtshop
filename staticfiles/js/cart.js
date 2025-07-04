@@ -165,6 +165,7 @@ class CartManager {
         this.emptyCartMessage.style.display = this.cart.length > 0 ? 'none' : 'block';
 
         localStorage.setItem('cart', JSON.stringify(this.cart));
+        updateCartCount();
     }
 
 }

@@ -19,15 +19,29 @@
     "image": [{% for img in images %}"{{ img.url }}"{% if not forloop.last %},{% endif %}{% endfor %}],
     "description": "{{ product.description|striptags|escapejs }}",
     "sku": "{{ product.id }}",
+    "hasMerchantReturnPolicy": {
+        "@type": "MerchantReturnPolicy",
+        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+        "merchantReturnDays": 7,
+        "returnMethod": "https://schema.org/ReturnByMail",
+        "returnFees": "https://schema.org/FreeReturn"
+    },
     "offers": {
         "@type": "Offer",
         "url": "{{ SITE_DOMAIN }}{{ request.path }}",
         "priceCurrency": "VND",
         "price": {{ variant.price }},
         "availability": "https://schema.org/InStock"
+    }{% if product.average_star > 0 %},
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "{{ product.average_star|floatformat:1 }}",
+        "reviewCount": "{{ product.star_details.total }}"
     }
+    {% endif %}
 }
 </script>
+
 {% endblock %}
 {% block content %}
 
@@ -207,13 +221,14 @@
 <!-- Modal đánh giá -->
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
-        <form method="POST" class="modal-content">
+        <form method="POST" class="modal-content" id="reviewForm">
             {% csrf_token %}
             <div class="modal-header">
                 <h5 class="modal-title"><i class="bi bi-star-fill text-warning"></i> Gửi đánh giá sản phẩm</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
             </div>
             <div class="modal-body">
+                <input type="number" class="form-control d-none" value="{{ product.id }}" name="productId" id="productId" required>
                 <!-- Chọn sao -->
                 <div class="text-center mb-3" id="star-select">
                     <div class="d-flex justify-content-center gap-3">

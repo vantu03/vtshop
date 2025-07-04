@@ -90,3 +90,59 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const reviewForm = document.getElementById("reviewForm");
+
+    reviewForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const formData = {
+            product_id: document.getElementById("productId").value,
+            rating: document.getElementById("ratingInput").value,
+            name: document.getElementById("name").value.trim(),
+            phone: document.getElementById("phone").value.trim(),
+            content: document.getElementById("content").value.trim()
+        };
+
+        fetch("/review/submit/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie('csrftoken')
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.message) {
+                showMessageModal('success', data.message, -1).show();
+                reviewForm.reset();
+                document.getElementById("ratingInput").value = "";
+                bootstrap.Modal.getInstance(document.getElementById("reviewModal")).hide();
+            } else {
+                alert(data.error || "Có lỗi xảy ra.");
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Lỗi gửi đánh giá.");
+        });
+    });
+
+    // CSRF
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});

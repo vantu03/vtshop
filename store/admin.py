@@ -62,14 +62,13 @@ class PromotionAdmin(admin.ModelAdmin):
     list_filter = ('is_active', 'discount_type', 'start_date', 'end_date')
     search_fields = ('name', 'code')
 
-
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('product', 'user', 'star', 'is_active', 'created_at')
+    list_display = ('product', 'name', 'phone', 'star', 'is_active', 'created_at')
     list_filter = ('star', 'is_active', 'created_at')
-    search_fields = ('product__name', 'user__username', 'comment')
-    autocomplete_fields = ('product', 'user')
+    search_fields = ('product__name', 'name', 'phone', 'comment')
     readonly_fields = ('created_at',)
+
 
 @admin.register(Star)
 class StarAdmin(admin.ModelAdmin):

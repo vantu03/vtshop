@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.contrib.auth.models import User
-from .models import Product, Order, ProductVariant, Star, OrderItem, Category
+from .models import Product, Order, ProductVariant, Star, OrderItem, Category, Review
 from django.http import HttpResponse
 from django.contrib.sitemaps import Sitemap
 from django.http import JsonResponse
@@ -177,3 +177,36 @@ def submit_cart_order(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'Yêu cầu không hợp lệ.'}, status=405)
+
+@csrf_exempt
+def submit_review(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+
+            product_id = data.get("product_id")
+            rating = data.get("rating")
+            name = data.get("name", "").strip()
+            phone = normalize_and_validate_phone(data.get("phone", "").strip())
+            content = data.get("content", "").strip()
+
+            # Kiểm tra dữ liệu đầu vào
+            if not all([product_id, rating, name, phone, content]):
+                return JsonResponse({"error": "Vui lòng điền đầy đủ thông tin."}, status=400)
+
+            product = Product.objects.filter(id=product_id).first()
+            if product:
+                star = Star.objects.filter(star=int(rating)).first()
+                if star:
+                    Review.objects.create(
+                        product=product,
+                        star=star,
+                        name=name,
+                        phone=phone,
+                        comment=content,
+                    )
+
+                    return JsonResponse({"message": "Đánh giá của bạn đã được gửi thành công!"})
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
