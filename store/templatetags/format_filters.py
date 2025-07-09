@@ -24,3 +24,15 @@ def range_tag(*args):
         return range(*args)
     except Exception:
         return []
+
+@register.filter
+def smart_number(value):
+    try:
+        value = int(value)
+        if value >= 1000000:
+            return f"{value/1000000:.1f}tr"
+        elif value >= 1000:
+            return f"{value/1000:.1f}k"
+        return str(value)
+    except:
+        return value

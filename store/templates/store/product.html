@@ -165,7 +165,7 @@
 
         {% if product.sold > 0 %}
             <div class="mt-2 small text-muted">
-                Đã bán: {{ product.sold }}
+                Đã bán: {{ product.sold|smart_number }}
             </div>
         {% endif %}
 

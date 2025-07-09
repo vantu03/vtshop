@@ -27,9 +27,7 @@
                         {% endif %}
 
                         {% if product.sold > 0 %}
-                            <span class="small text-muted">
-                                &bull; Đã bán: {{ product.sold }}
-                            </span>
+                            <span class="small text-muted">• Đã bán: {{ product.sold|smart_number }}</span>
                         {% endif %}
                     </div>
 
