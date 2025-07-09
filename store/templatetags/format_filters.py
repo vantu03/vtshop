@@ -16,3 +16,11 @@ def smart_number(value):
         return int(value) if value.is_integer() else round(value, 1)
     except (ValueError, TypeError):
         return value
+
+@register.simple_tag
+def range_tag(*args):
+    try:
+        args = [int(a) for a in args]
+        return range(*args)
+    except Exception:
+        return []

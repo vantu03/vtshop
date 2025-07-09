@@ -27,7 +27,7 @@ class ProductAdmin(admin.ModelAdmin):
         fields = ('content_type', 'content', 'is_active')
         show_change_link = True
 
-    list_display = ('name', 'category', 'is_active', 'view_count', 'average_rating', 'created_at')
+    list_display = ('name', 'category', 'is_active', 'view_count', 'sold', 'created_at')
     list_filter = ('is_active', 'category', 'created_at')
     search_fields = ('name', 'description')
     prepopulated_fields = {'slug': ('name',)}

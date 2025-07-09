@@ -35,14 +35,14 @@ class CartManager {
                             img.src = data.thumbnail;
                             img.alt = data.product_name;
                             img.style = 'width: 80px; height: 80px; object-fit: contain;';
-                            img.className = 'rounded';
+                            img.className = 'rounded me-2';
 
                             const info = document.createElement('div');
                             info.className = 'flex-grow-1';
                             const name = document.createElement('div');
                             name.className = 'fw-bold mb-1';
                             const link = document.createElement('a');
-                            link.href = `/product/${data.product_slug}/`;
+                            link.href = `${data.product_slug}`;
                             link.className = 'text-decoration-none text-dark';
                             link.textContent = data.product_name;
                             name.appendChild(link);

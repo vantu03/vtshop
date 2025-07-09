@@ -51,7 +51,7 @@ class Product(models.Model):
     is_active = models.BooleanField(default=True)
 
     view_count = models.PositiveIntegerField(default=0)
-    average_rating = models.FloatField(default=0.0)
+    sold = models.PositiveIntegerField(default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -112,7 +112,6 @@ class Order(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Chờ duyệt'),
         ('confirmed', 'Đã xác nhận'),
-        ('paid', 'Đã thanh toán'),
         ('shipped', 'Đã giao hàng'),
         ('delivered', 'Đã nhận hàng'),
         ('cancelled', 'Đã hủy'),

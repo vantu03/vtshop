@@ -51,11 +51,14 @@ def product_detail_view(request, category_slug, product_slug):
     else:
         og_image = None
 
+    reviews = product.reviews.filter(is_active=True).order_by('-created_at')[:3]
+
     return render(request, 'store/product.html', {
         'product': product,
         'variant': variant,
         'images': images,
         'og_image': og_image,
+        'reviews': reviews,
         'stars': Star.objects.all().order_by('star')
     })
 
@@ -82,7 +85,7 @@ def get_variant(request, variant_id):
         return JsonResponse({
             'variant_id': variant.id,
             'product_name': variant.product.name,
-            'product_slug': variant.product.slug,
+            'product_slug': variant.product.get_full_slug(),
             'variant_name': variant.name,
             'price': float(variant.price),
             'thumbnail': variant.product.thumbnail.image.url,
