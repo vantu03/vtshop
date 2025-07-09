@@ -106,7 +106,7 @@
 
         <!-- Ảnh nhỏ điều khiển carousel -->
         <div class="py-1">
-            <div class="d-flex justify-content-center gap-2 flex-wrap">
+            <div class="d-flex justify-content-center gap-2 overflow-auto">
                 {% for img in images %}
                 <img src="{{ img.url }}" alt="{{ img.alt_text }}"
                      class="img-thumbnail"
