@@ -3,6 +3,7 @@ from slugify import slugify
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count
+from ckeditor_uploader.fields import RichTextUploadingField
 
 class Image(models.Model):
     image = models.ImageField(upload_to='images/')
@@ -217,7 +218,7 @@ class ProductContent(models.Model):
     )
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='contents')
-    content = models.TextField()
+    content = RichTextUploadingField()
     content_type = models.CharField(
         max_length=20,
         choices=CONTENT_TYPE_CHOICES,

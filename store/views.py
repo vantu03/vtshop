@@ -2,8 +2,7 @@ from django.conf import settings
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import json
-from django.contrib.auth.models import User
-from .models import Product, Order, ProductVariant, Star, OrderItem, Category, Review
+from .models import Product, Order, ProductVariant, Star, OrderItem, Category, Review, Image
 from django.http import HttpResponse
 from django.contrib.sitemaps import Sitemap
 from django.http import JsonResponse

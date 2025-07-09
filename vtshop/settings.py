@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'store',
     'django.contrib.sitemaps',
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 # ========== Middleware ==========
@@ -123,5 +125,32 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/upload/'
 MEDIA_ROOT = BASE_DIR / 'upload'
 
+
 # ========== Primary Key ==========
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ========== CKEDITOR ==========
+
+CKEDITOR_UPLOAD_PATH = "images/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_RESTRICT_BY_DATE = False
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Full',
+        'width': '100%',
+        'extraPlugins': ','.join([
+            'codesnippet',
+            'widget',
+            'lineutils',
+            'clipboard',
+            'dialog',
+        ]),
+        'contentsCss': [
+            'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
+            'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css',
+        ],
+        'allowedContent': True,
+        'extraAllowedContent': '*(*);*{*}',
+    }
+}
