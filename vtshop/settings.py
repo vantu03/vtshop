@@ -139,18 +139,12 @@ CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Full',
         'width': '100%',
-        'extraPlugins': ','.join([
-            'codesnippet',
-            'widget',
-            'lineutils',
-            'clipboard',
-            'dialog',
-        ]),
+        'extraPlugins': 'codesnippet, widget, lineutils, clipboard, dialog',
         'contentsCss': [
             'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
             'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css',
         ],
         'allowedContent': True,
-        'extraAllowedContent': '*(*);*{*}',
+        'extraAllowedContent': 'i(*)[*]{*}; span(*)[*]{*}',
     }
 }
