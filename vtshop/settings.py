@@ -145,6 +145,6 @@ CKEDITOR_CONFIGS = {
             'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css',
         ],
         'allowedContent': True,
-        'extraAllowedContent': '*(*);*{*}',
+        'extraAllowedContent': '*(*);*[*]',
     }
 }
