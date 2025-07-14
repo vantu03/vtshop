@@ -6,7 +6,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.home_view, name='home'),
-    path('api/lichhoc/', views.get_lichhoc, name='get_lichhoc'),
     path('cart/', views.cart_view, name='cart'),
     path('get/variant/<int:variant_id>/', views.get_variant, name='get_variant'),
     path('sitemap.xml', sitemap, {'sitemaps': {
