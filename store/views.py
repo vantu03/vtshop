@@ -212,3 +212,17 @@ def submit_review(request):
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
+
+from django.http import JsonResponse
+from .lichICTU import LichSinhVienICTU
+
+def get_lichhoc(request):
+    username = request.GET.get('username')
+    password = request.GET.get('password')
+
+    if not username or not password:
+        return JsonResponse({'status': 'error', 'message': 'Thiếu username hoặc password'}, status=400)
+
+    lich = LichSinhVienICTU(username, password)
+    data = lich.get_schedule()
+    return JsonResponse(data, safe=False)
