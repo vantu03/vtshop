@@ -314,8 +314,7 @@
         <h2 class="fw-bold mb-4">Sản phẩm liên quan</h2>
         <div class="d-flex overflow-auto gap-3">
             {% for product in related_products %}
-
-                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                <div style="min-width: 160px; max-width: 220px; flex: 0 0 auto;">
                     <a href="{% url 'product_detail' category_slug=product.category.slug product_slug=product.slug %}" class="text-decoration-none text-dark">
                         <div class="card h-100 shadow-sm border-0 p-2">
                             <img src="{{ product.thumbnail.image.url }}" class="card-img-top"
