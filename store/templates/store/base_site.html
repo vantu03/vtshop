@@ -93,6 +93,16 @@
                     </div>
                 </a>
 
+                <!-- Tìm kiếm - hiện cạnh logo trên màn to -->
+                <form action="{% url 'search' %}" method="get" class="d-none d-lg-flex ms-auto" style="min-width:300px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control search-input" name="keyword" placeholder="Tìm kiếm sản phẩm..." aria-label="Tìm kiếm">
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+
                 <!-- Navbar toggler -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
                     <span class="navbar-toggler-icon"></span>
@@ -118,30 +128,44 @@
 
     </header>
 
-
-    <!-- THANH DANH MỤC NGANG -->
+    <!-- DANH MỤC NGANG -->
     <div class="py-2 border-top border-bottom bg-white">
-        <div class="container d-flex overflow-auto" style="white-space: nowrap;">
+        <div class="container">
 
-            <form action="{% url 'search' %}" method="get" class="d-flex" style="min-width:300px;">
-                <div class="input-group w-100">
-                    <input type="text" class="form-control search-input" name="keyword" placeholder="Tìm kiếm sản phẩm..." aria-label="Tìm kiếm">
-                    <button class="btn btn-outline-secondary" type="submit">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </div>
-            </form>
-            {% for cat in header_categories %}
-                <a href="{% url 'category_products' category_slug=cat.slug %}"
-                   class="py-2 px-3 text-dark text-decoration-none d-flex align-items-center gap-1 fw-semibold rounded">
-                    <img src="{{ cat.icon.image.url }}" alt="{{ cat.name }}" width="24" height="24">
-                    {{ cat.name }}
-                </a>
-            {% empty %}
-                <span class="text-muted">Chưa có danh mục</span>
-            {% endfor %}
+            <!-- Hàng chứa tìm kiếm + icon danh mục (màn nhỏ) -->
+            <div class="d-flex d-lg-none align-items-center gap-2 mb-2">
+                <!-- Form tìm kiếm -->
+                <form action="{% url 'search' %}" method="get" class="flex-grow-1">
+                    <div class="input-group">
+                        <input type="text" class="form-control search-input" name="keyword" placeholder="Tìm kiếm sản phẩm...">
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Nút danh mục -->
+                <button class="btn btn-outline-dark" type="button" title="Danh mục">
+                    <i class="bi bi-list fs-5"></i>
+                </button>
+            </div>
+
+            <!-- Danh mục (scroll ngang) -->
+            <div class="d-flex overflow-auto gap-2" style="white-space: nowrap;">
+                {% for cat in header_categories %}
+                    <a href="{% url 'category_products' category_slug=cat.slug %}"
+                       class="py-2 px-3 text-dark text-decoration-none d-flex align-items-center gap-1 fw-semibold rounded">
+                        <img src="{{ cat.icon.image.url }}" alt="{{ cat.name }}" width="24" height="24">
+                        {{ cat.name }}
+                    </a>
+                {% empty %}
+                    <span class="text-muted">Chưa có danh mục</span>
+                {% endfor %}
+            </div>
+
         </div>
     </div>
+
 
 
     <!-- Main Content -->
