@@ -46,6 +46,20 @@
     <script src="{% static 'js/message.js' %}?v={{ STATIC_VERSION }}"></script>
     <script src="{% static 'js/main.js' %}?v={{ STATIC_VERSION }}"></script>
 
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "{{ BRAND_NAME }}",
+        "url": "{{ SITE_DOMAIN }}",
+        "logo": "{{ SITE_DOMAIN }}{% static 'logo.png' %}",
+        "sameAs": [
+            "https://www.facebook.com/phukienso1com",
+            "https://www.tiktok.com/@takaphukienso01"
+        ]
+    }
+    </script>
+
 
     {% block extra_head %}{% endblock %}
 
