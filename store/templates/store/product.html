@@ -32,16 +32,16 @@
         "priceCurrency": "VND",
         "price": {{ variant.price }},
         "availability": "https://schema.org/InStock"
-    }{% if product.average_star > 0 %}
-    , "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "{{ product.average_star|floatformat:1 }}",
-        "reviewCount": "{{ product.star_details.total }}"
     }{% if product.brand %}
     , "brand": {
         "@type": "Brand",
         "name": "{{ product.brand.name|escapejs }}"
-    }{% endif %}{% if reviews %}
+    }{% endif %}{% if product.average_star > 0 %}
+    , "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "{{ product.average_star|floatformat:1 }}",
+        "reviewCount": "{{ product.star_details.total }}"
+    }{% if reviews %}
     , "review": [
         {% for review in reviews %}
             {
@@ -60,7 +60,7 @@
             }{% if not forloop.last %},{% endif %}
         {% endfor %}
     ]
-    {% endif %}
+    {% endif %}{% endif %}
 
 }
 </script>

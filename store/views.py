@@ -227,7 +227,7 @@ def search_view(request):
     if keyword:
         brand = Brand.objects.filter(name__icontains=keyword).first()
         if brand:
-            return redirect(f'/tim-kiem/?brand={brand.slug}')
+            return redirect(f'/search/?brand={brand.slug}')
         else:
             category = Category.objects.filter(name__icontains=keyword).first()
 
