@@ -2,9 +2,9 @@
 {% load format_filters %}
 {% block content %}
 <h2 class="fw-bold mb-4">Sản phẩm nổi bật</h2>
-<div class="row g-2">
+<div class="d-flex overflow-auto gap-3">
     {% for product in featured_products %}
-    <div class="d-flex overflow-auto gap-3">
+    <div class="col-6 col-md-4 col-lg-3 col-xl-2">
         <a href="{% url 'product_detail' category_slug=product.category.slug product_slug=product.slug %}" class="text-decoration-none text-dark">
             <div class="card h-100 shadow-sm border-0 p-2">
                 <img src="{{ product.thumbnail.image.url }}" class="card-img-top"
