@@ -144,24 +144,33 @@
                     </div>
                 </form>
 
-                <!-- Nút danh mục -->
-                <button class="btn btn-outline-dark" type="button" title="Danh mục">
+                <!-- Nút toggle danh mục -->
+                <button class="btn btn-outline-dark d-lg-none"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#categoryCollapse"
+                        aria-controls="categoryCollapse"
+                        aria-expanded="false"
+                        aria-label="Hiện danh mục">
                     <i class="bi bi-list fs-5"></i>
                 </button>
             </div>
 
-            <!-- Danh mục (scroll ngang) -->
-            <div class="d-flex overflow-auto gap-2" style="white-space: nowrap;">
-                {% for cat in header_categories %}
-                    <a href="{% url 'category_products' category_slug=cat.slug %}"
-                       class="py-2 px-3 text-dark text-decoration-none d-flex align-items-center gap-1 fw-semibold rounded">
-                        <img src="{{ cat.icon.image.url }}" alt="{{ cat.name }}" width="24" height="24">
-                        {{ cat.name }}
-                    </a>
-                {% empty %}
-                    <span class="text-muted">Chưa có danh mục</span>
-                {% endfor %}
+           <!-- Danh mục (scroll ngang) -->
+            <div class="collapse d-lg-block mt-2" id="categoryCollapse">
+                <div class="d-flex overflow-auto gap-2" style="white-space: nowrap;">
+                    {% for cat in header_categories %}
+                        <a href="{% url 'category_products' category_slug=cat.slug %}"
+                           class="py-2 px-3 text-dark text-decoration-none d-flex align-items-center gap-1 fw-semibold rounded">
+                            <img src="{{ cat.icon.image.url }}" alt="{{ cat.name }}" width="24" height="24">
+                            {{ cat.name }}
+                        </a>
+                    {% empty %}
+                        <span class="text-muted">Chưa có danh mục</span>
+                    {% endfor %}
+                </div>
             </div>
+
 
         </div>
     </div>
