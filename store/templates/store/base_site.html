@@ -93,17 +93,6 @@
                     </div>
                 </a>
 
-                <!-- Form tìm kiếm -->
-                <form class="d-none d-lg-flex align-items-center flex-grow-1" style="max-width: 600px;" action="{% url 'search' %}" method="get">
-                    <div class="input-group">
-                        <input type="text" class="form-control" name="keyword" placeholder="Tìm kiếm..." aria-label="Tìm kiếm">
-                        <button class="btn btn-outline-secondary" type="submit">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </form>
-
-
                 <!-- Navbar toggler -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
                     <span class="navbar-toggler-icon"></span>
@@ -129,23 +118,19 @@
 
     </header>
 
-    <!-- Form tìm kiếm cho màn hình nhỏ -->
-    <div class="bg-white py-2 d-lg-none shadow-sm">
-        <div class="container">
-            <form action="{% url 'search' %}" method="get" class="d-flex">
+
+    <!-- THANH DANH MỤC NGANG -->
+    <div class="py-2 border-top border-bottom bg-white">
+        <div class="container d-flex overflow-auto" style="white-space: nowrap;">
+
+            <form action="{% url 'search' %}" method="get" class="d-flex" style="min-width:300px;">
                 <div class="input-group w-100">
-                    <input type="text" class="form-control" name="keyword" placeholder="Tìm kiếm sản phẩm..." aria-label="Tìm kiếm">
+                    <input type="text" class="form-control search-input" name="keyword" placeholder="Tìm kiếm sản phẩm..." aria-label="Tìm kiếm">
                     <button class="btn btn-outline-secondary" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <!-- THANH DANH MỤC NGANG -->
-    <div class="py-2 border-top border-bottom bg-white">
-        <div class="container d-flex overflow-auto" style="white-space: nowrap;">
             {% for cat in header_categories %}
                 <a href="{% url 'category_products' category_slug=cat.slug %}"
                    class="py-2 px-3 text-dark text-decoration-none d-flex align-items-center gap-1 fw-semibold rounded">
@@ -172,7 +157,6 @@
         </div>
 
     </footer>
-
     {% block extra_js %}{% endblock %}
 </body>
 </html>
