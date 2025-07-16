@@ -63,25 +63,17 @@ def product_detail_view(request, category_slug, product_slug):
     })
 
 def category_products_view(request, category_slug=None):
-    category = None
-    brand = None
 
-    brand = Brand.objects.filter(slug__icontains=request.GET.get("brand", "").strip()).first()
-    if brand:
-        products = Product.objects.filter(brand=brand, is_active=True)
-    else:
-        products = Product.objects.filter(is_active=True)
-
-    # Nếu có slug
     if category_slug:
-        # Thử tìm theo danh mục
+
         category = Category.objects.filter(slug=category_slug).first()
+
         if category:
-            products = products.filter(category=category)
-        elif not brand:
+            products = Product.objects.filter(category=category, is_active=True)
+        else:
             return render(request, 'store/404.html', status=404)
 
-    return render(request, 'store/products.html', {'products': products, 'category': category, 'brand': brand})
+        return render(request, 'store/products.html', {'products': products, 'category': category})
 
 def cart_view(request):
     return render(request, 'store/cart.html', )
@@ -225,17 +217,13 @@ def search_view(request):
     keyword = request.GET.get('keyword', '').strip()
 
     if keyword:
-        brand = Brand.objects.filter(name__icontains=keyword).first()
-        if brand:
-            return redirect(f'/search/?brand={brand.slug}')
-        else:
-            category = Category.objects.filter(name__icontains=keyword).first()
+        category = Category.objects.filter(name__icontains=keyword).first()
 
-            if category:
-                return redirect(f'/{category.slug}/')
-            else:
-                product = Product.objects.filter(name__icontains=keyword, is_active=True).select_related('category').first()
-                if product and product.category:
-                    return redirect(f'/{product.category.slug}/?key={keyword}')
+        if category:
+            return redirect(f'/{category.slug}/')
+        else:
+            product = Product.objects.filter(name__icontains=keyword, is_active=True).select_related('category').first()
+            if product and product.category:
+                return redirect(f'/{product.category.slug}/?key={keyword}')
 
     return redirect('home')
