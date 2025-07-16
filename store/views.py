@@ -12,7 +12,7 @@ def custom_404_view(request, exception):
     return render(request, "store/404.html", status=404)
 
 def home_view(request):
-    featured_products = Product.objects.order_by('-views')[:12]  # Xem nhiều nhất
+    featured_products = Product.objects.order_by('-view_count')[:12]  # Xem nhiều nhất
     new_products = Product.objects.order_by('-created_at')[:12]  # Mới nhất
     return render(request, 'store/home.html', {
         'featured_products': featured_products,
