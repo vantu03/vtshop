@@ -53,13 +53,19 @@ def product_detail_view(request, category_slug, product_slug):
 
     reviews = product.reviews.filter(is_active=True).order_by('-created_at')[:3]
 
+    related_products = Product.objects.filter(
+        category=product.category,
+        is_active=True
+    ).exclude(id=product.id)[:8]
+
     return render(request, 'store/product.html', {
         'product': product,
         'variant': variant,
         'images': images,
         'og_image': og_image,
         'reviews': reviews,
-        'stars': Star.objects.all().order_by('star')
+        'stars': Star.objects.all().order_by('star'),
+        "related_products": related_products,
     })
 
 def category_products_view(request, category_slug=None):

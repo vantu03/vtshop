@@ -150,13 +150,24 @@
     </main>
 
     <!-- Footer -->
-    <footer class=" bg-white shadow-sm py-3">
+    <footer class="bg-white shadow-sm py-4 mt-5">
         <div class="container text-center">
-            <p>&copy; {{ SITE_NAME }} {% now "Y" %}.</p>
-            <p>Liên hệ: <a href="mailto:{{ BRAND_EMAIL }}">{{ BRAND_EMAIL }}</a></p>
+            <p class="mb-2 fw-semibold text-muted">&copy; {{ SITE_NAME }} {% now "Y" %}</p>
+            <ul class="list-inline mb-0">
+                <li class="list-inline-item mx-2">
+                    <a href="mailto:{{ BRAND_EMAIL }}" class="text-decoration-none text-dark" aria-label="Gửi email tới {{ BRAND_EMAIL }}">
+                        <i class="bi bi-envelope-fill me-1"></i>{{ BRAND_EMAIL }}
+                    </a>
+                </li>
+                <li class="list-inline-item mx-2">
+                    <a href="https://facebook.com/phukienso1com" target="_blank" rel="noopener" class="text-decoration-none text-dark" aria-label="Truy cập Fanpage Facebook">
+                        <i class="bi bi-facebook me-1 text-primary"></i>Fanpage
+                    </a>
+                </li>
+            </ul>
         </div>
-
     </footer>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>

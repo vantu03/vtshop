@@ -77,8 +77,31 @@
 
 
 <section class="row">
-    <!-- Tiêu đề sản phẩm -->
-    <h1 class="fw-bold py-1">{{ product.name }}</h1>
+    <!-- Tiêu đề sản phẩm + nút chia sẻ cùng hàng -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-2">
+        <!-- Tiêu đề -->
+        <h1 class="fw-bold mb-0">{{ product.name }}</h1>
+
+        <!-- Nhóm nút chia sẻ -->
+        <div class="d-flex align-items-center gap-2">
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ SITE_DOMAIN }}{{ request.path }}"
+               target="_blank" rel="noopener nofollow"
+               class="btn btn-sm btn-outline-primary rounded-circle"
+               title="Chia sẻ Facebook">
+                <i class="bi bi-facebook"></i>
+            </a>
+
+            <!-- Share hệ thống -->
+            <button type="button"
+                    class="btn btn-sm btn-outline-primary rounded-circle"
+                    onclick="shareNative()"
+                    title="Chia sẻ hệ thống (nếu được hỗ trợ)">
+                <i class="bi bi-share-fill"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- Ảnh sản phẩm -->
     <div class="col-md-7 p-4 bg-white shadow-sm">
         <!-- Carousel chứa toàn bộ ảnh -->
@@ -351,6 +374,45 @@
     </div>
 </div>
 
+{% if related_products %}
+<section class="bg-white shadow-sm p-4 mt-4">
+    <h2 class="fw-bold mb-4">Sản phẩm liên quan</h2>
+    <div class="row g-3">
+        {% for product in related_products %}
+
+            <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                <a href="{% url 'product_detail' category_slug=product.category.slug product_slug=product.slug %}" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm border-0 p-2">
+                        <img src="{{ product.thumbnail.image.url }}" class="card-img-top"
+                             style="width: 100%; height: 160px; object-fit: contain;"
+                             alt="{{ product.name }}">
+                        <div class="card-body p-2" style="height: 140px;">
+                            <h6 class="card-title text-primary mb-1"
+                                style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+                                       overflow: hidden; text-overflow: ellipsis;">
+                                {{ product.name }}
+                            </h6>
+
+                            <p class="text-danger fw-bold mb-0">{{ product.get_variant.price|currency }}</p>
+                            <div>
+                                {% if product.average_star > 0 %}
+                                    <span class="text-dark small align-items-center gap-1">
+                                        <i class="bi bi-star-fill text-warning"></i>
+                                        {{ product.average_star|floatformat:1 }}
+                                    </span>
+                                {% endif %}
+                                {% if product.sold > 0 %}
+                                    <span class="small text-muted">• Đã bán: {{ product.sold|smart_number }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
 
 
 <!-- Modal ảnh lớn -->
@@ -370,5 +432,15 @@
 </div>
 
 <script src="{% static 'js/product.js' %}?v={{ STATIC_VERSION }}"></script>
-
+<script>
+function shareNative() {
+    if (navigator.share) {
+        navigator.share({
+            title: document.title,
+            text: "{{ product.name|escapejs }} - Xem tại Phukienso1.com",
+            url: window.location.href
+        }).catch(console.error);
+    }
+}
+</script>
 {% endblock %}
