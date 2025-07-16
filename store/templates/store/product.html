@@ -37,8 +37,11 @@
         "@type": "AggregateRating",
         "ratingValue": "{{ product.average_star|floatformat:1 }}",
         "reviewCount": "{{ product.star_details.total }}"
-    }
-    {% endif %}{% if reviews %}
+    }{% if product.brand %}
+    , "brand": {
+        "@type": "Brand",
+        "name": "{{ product.brand.name|escapejs }}"
+    }{% endif %}{% if reviews %}
     , "review": [
         {% for review in reviews %}
             {

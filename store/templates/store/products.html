@@ -10,6 +10,8 @@
         <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Trang chủ</a></li>
         {% if category %}
             <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+        {% elif brand %}
+            <li class="breadcrumb-item active" aria-current="page">{{ brand.name }}</li>
         {% else %}
             <li class="breadcrumb-item active" aria-current="page">Sản phẩm</li>
         {% endif %}

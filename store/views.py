@@ -1,8 +1,8 @@
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .models import Product, Order, ProductVariant, Star, OrderItem, Category, Review, Image
+from .models import Product, Order, ProductVariant, Star, OrderItem, Category, Review, Image, Brand
 from django.http import HttpResponse
 from django.contrib.sitemaps import Sitemap
 from django.http import JsonResponse
@@ -64,16 +64,24 @@ def product_detail_view(request, category_slug, product_slug):
 
 def category_products_view(request, category_slug=None):
     category = None
+    brand = None
 
-    if category_slug:
-        category = Category.objects.filter(slug=category_slug).first()
-        if not category:
-            return render(request, 'store/404.html', status=404)
-        products = Product.objects.filter(is_active=True, category=category).order_by('-created_at')
+    brand = Brand.objects.filter(slug__icontains=request.GET.get("brand", "").strip()).first()
+    if brand:
+        products = Product.objects.filter(brand=brand, is_active=True)
     else:
-        products = Product.objects.filter(is_active=True).order_by('-created_at')
+        products = Product.objects.filter(is_active=True)
 
-    return render(request, 'store/products.html', {'products': products, 'category': category})
+    # Nếu có slug
+    if category_slug:
+        # Thử tìm theo danh mục
+        category = Category.objects.filter(slug=category_slug).first()
+        if category:
+            products = products.filter(category=category)
+        elif not brand:
+            return render(request, 'store/404.html', status=404)
+
+    return render(request, 'store/products.html', {'products': products, 'category': category, 'brand': brand})
 
 def cart_view(request):
     return render(request, 'store/cart.html', )
@@ -212,3 +220,22 @@ def submit_review(request):
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
+
+def search_view(request):
+    keyword = request.GET.get('keyword', '').strip()
+
+    if keyword:
+        brand = Brand.objects.filter(name__icontains=keyword).first()
+        if brand:
+            return redirect(f'/tim-kiem/?brand={brand.slug}')
+        else:
+            category = Category.objects.filter(name__icontains=keyword).first()
+
+            if category:
+                return redirect(f'/{category.slug}/')
+            else:
+                product = Product.objects.filter(name__icontains=keyword, is_active=True).select_related('category').first()
+                if product and product.category:
+                    return redirect(f'/{product.category.slug}/?key={keyword}')
+
+    return redirect('home')

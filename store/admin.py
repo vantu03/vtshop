@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Image, Product, ProductVariant, ProductContent, Order, Promotion, Review, Star, OrderItem
+from .models import Category, Image, Product, ProductVariant, ProductContent, Order, Promotion, Review, Star, OrderItem, Brand
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -74,3 +74,9 @@ class ReviewAdmin(admin.ModelAdmin):
 class StarAdmin(admin.ModelAdmin):
     list_display = ('label', 'star', )
     list_filter = ('star',)
+
+@admin.register(Brand)
+class BrandAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug')
+    search_fields = ('name',)
+    prepopulated_fields = {'slug': ('name',)}

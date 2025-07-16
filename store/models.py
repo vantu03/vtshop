@@ -35,21 +35,34 @@ class Category(models.Model):
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
+class Brand(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True, blank=True)
+    logo = models.ForeignKey(Image, null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
 class Product(models.Model):
     title = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
+    brand = models.ForeignKey(Brand, null=True, blank=True, on_delete=models.SET_NULL, related_name='products')
     thumbnail = models.ForeignKey(
         Image,
         null=True,
         on_delete=models.SET_NULL,
     )
     images = models.ManyToManyField(Image, related_name='images', blank=True)
-
     is_active = models.BooleanField(default=True)
-
     view_count = models.PositiveIntegerField(default=0)
     sold = models.PositiveIntegerField(default=0)
 

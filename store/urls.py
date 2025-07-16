@@ -15,6 +15,7 @@ urlpatterns = [
     path("robots.txt", views.robots_txt),
     path('order/submit/', views.submit_cart_order, name="order_submit"),
     path('review/submit/', views.submit_review, name='submit_review'),
+    path('tim-kiem/', views.search_view, name='search'),
     path('<slug:category_slug>/<slug:product_slug>/', views.product_detail_view, name='product_detail'),
     path('<slug:category_slug>/', views.category_products_view, name='category_products'),
 ]
