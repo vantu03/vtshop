@@ -16,7 +16,7 @@
     "@context": "https://schema.org/",
     "@type": "Product",
     "name": "{{ product.name|escapejs }}",
-    "image": [{% for img in images %}"{{ img.url }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+    "image": [{% for img in images %}"{{ SITE_DOMAIN }}{{ img.url }}"{% if not forloop.last %},{% endif %}{% endfor %}],
     "description": "{{ product.description|striptags|escapejs }}",
     "sku": "{{ product.id }}",
     "hasMerchantReturnPolicy": {
@@ -63,8 +63,35 @@
     {% endif %}{% endif %}
 
 }
+
 </script>
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Trang chủ",
+      "item": "{{ SITE_DOMAIN }}/"
+    },
+      {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ product.category.name|escapejs }}",
+      "item": "{{ SITE_DOMAIN }}{% url 'category_products' category_slug=product.category.slug %}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ product.name }}",
+      "item": "{{ SITE_DOMAIN }}{{ request.path }}"
+    }
+  ]
+}
+</script>
 {% endblock %}
 {% block content %}
 
