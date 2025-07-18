@@ -50,3 +50,10 @@ def build_query(context, **kwargs):
 
     encoded = query.urlencode()
     return f"?{encoded}"
+
+@register.filter
+def mul(value, arg):
+    try:
+        return float(value) * float(arg)
+    except:
+        return 0
