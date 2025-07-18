@@ -30,17 +30,24 @@
 <div class="mb-4 d-flex gap-2 flex-wrap">
     {% for b in all_brands %}
         {% if request.GET.brand == b.id|stringformat:"s" %}
-            <a href="{% build_query brand=None %}" class="btn btn-sm btn-primary d-flex align-items-center gap-1">
-                <i class="bi bi-check-circle"></i> {{ b.name }}
+            <a href="{% build_query brand=None %}" class="btn btn-sm btn-primary d-flex align-items-center gap-2">
+                {% if b.logo %}
+                    <img src="{{ b.logo.image.url }}" alt="{{ b.name }}" height="20" class="rounded">
+                {% endif %}
+                {{ b.name }}
             </a>
         {% else %}
-            <a href="{% build_query brand=b.id %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
-                <i class="bi bi-circle"></i> {{ b.name }}
+            <a href="{% build_query brand=b.id %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2">
+                {% if b.logo %}
+                    <img src="{{ b.logo.image.url }}" alt="{{ b.name }}" height="20" class="rounded">
+                {% endif %}
+                {{ b.name }}
             </a>
         {% endif %}
     {% endfor %}
 </div>
 {% endif %}
+
 
 <div class="mb-4 d-flex gap-2 flex-wrap align-items-center">
     <i class="bi bi-filter"></i>
