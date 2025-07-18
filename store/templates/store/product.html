@@ -181,9 +181,9 @@
 
             <span class="text-danger h4 fw-bold d-flex align-items-center mb-0">
                 <i class="bi bi-tag-fill me-2"></i>
-                <span>{{ variant.price|currency }}</span>
+                <span class="me-2">{{ variant.price|currency }}</span>
                 {% if product.default_price and product.default_price > variant.price %}
-                <span class="text-muted text-decoration-line-through">
+                <span class="text-muted text-decoration-line-through me-2">
                     {{ product.default_price|currency }}
                 </span>
                 {% endif %}
