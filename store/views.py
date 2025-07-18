@@ -94,9 +94,9 @@ def category_products_view(request, category_slug=None):
     # Sắp xếp
     sort = request.GET.get('sort')
     if sort == 'price_asc':
-        products = products.order_by('variants__price')
+        products = products.order_by('base_price')
     elif sort == 'price_desc':
-        products = products.order_by('-variants__price')
+        products = products.order_by('-base_price')
     elif sort == 'best_seller':
         products = products.order_by('-sold')
     elif sort == 'new':
