@@ -37,7 +37,7 @@
                     {{ b.name }}
                 {% endif %}
             </a>
-
+        {% else %}
             <a href="{% build_query brand=b.id %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2">
                 {% if b.logo %}
                     <img src="{{ b.logo.image.url }}" alt="{{ b.name }}" height="20" class="rounded">
