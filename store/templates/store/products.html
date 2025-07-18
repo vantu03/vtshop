@@ -4,7 +4,6 @@
 {% load format_filters %}
 {% block content %}
 
-
 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Trang chủ</a></li>
@@ -15,7 +14,6 @@
         {% else %}
             <li class="breadcrumb-item active" aria-current="page">Sản phẩm</li>
         {% endif %}
-
     </ol>
 </nav>
 
@@ -26,11 +24,12 @@
         Danh sách sản phẩm
     {% endif %}
 </h1>
+
 {% if all_brands %}
 <div class="mb-4 d-flex gap-2 flex-wrap">
     {% for b in all_brands %}
         {% if request.GET.brand == b.id|stringformat:"s" %}
-            <a href="{% build_query brand=None %}" class="btn btn-sm btn-primary d-flex align-items-center gap-2">
+            <a href="{% build_query brand=None %}" class="border border-primary bg-primary text-white rounded px-2 py-1 d-flex align-items-center gap-2 text-decoration-none">
                 {% if b.logo %}
                     <img src="{{ b.logo.image.url }}" alt="{{ b.name }}" height="20" class="rounded">
                 {% else %}
@@ -38,7 +37,7 @@
                 {% endif %}
             </a>
         {% else %}
-            <a href="{% build_query brand=b.id %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2">
+            <a href="{% build_query brand=b.id %}" class="border rounded px-2 py-1 text-dark bg-white d-flex align-items-center gap-2 text-decoration-none">
                 {% if b.logo %}
                     <img src="{{ b.logo.image.url }}" alt="{{ b.name }}" height="20" class="rounded">
                 {% else %}
@@ -50,24 +49,29 @@
 </div>
 {% endif %}
 
-
 <div class="mb-4 d-flex gap-2 flex-wrap align-items-center">
     <i class="bi bi-filter"></i>
-    <a href="{% build_query sort='outstanding' %}" class="btn btn-sm {% if not request.GET.sort or request.GET.sort == 'outstanding' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+    <a href="{% build_query sort='outstanding' %}"
+       class="rounded px-2 py-1 text-decoration-none {% if not request.GET.sort or request.GET.sort == 'outstanding' %}border border-primary bg-primary text-white{% else %}border bg-white text-dark{% endif %}">
         <i class="bi bi-stars"></i> Nổi bật
     </a>
-    <a href="{% build_query sort='new' %}" class="btn btn-sm {% if request.GET.sort == 'new' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+    <a href="{% build_query sort='new' %}"
+       class="rounded px-2 py-1 text-decoration-none {% if request.GET.sort == 'new' %}border border-primary bg-primary text-white{% else %}border bg-white text-dark{% endif %}">
         <i class="bi bi-clock-history"></i> Mới nhất
     </a>
-    <a href="{% build_query sort='price_asc' %}" class="btn btn-sm {% if request.GET.sort == 'price_asc' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+    <a href="{% build_query sort='price_asc' %}"
+       class="rounded px-2 py-1 text-decoration-none {% if request.GET.sort == 'price_asc' %}border border-primary bg-primary text-white{% else %}border bg-white text-dark{% endif %}">
         <i class="bi bi-sort-down"></i> Giá thấp
     </a>
-    <a href="{% build_query sort='price_desc' %}" class="btn btn-sm {% if request.GET.sort == 'price_desc' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+    <a href="{% build_query sort='price_desc' %}"
+       class="rounded px-2 py-1 text-decoration-none {% if request.GET.sort == 'price_desc' %}border border-primary bg-primary text-white{% else %}border bg-white text-dark{% endif %}">
         <i class="bi bi-sort-up"></i> Giá cao
     </a>
-    <a href="{% build_query sort='best_seller' %}" class="btn btn-sm {% if request.GET.sort == 'best_seller' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+    <a href="{% build_query sort='best_seller' %}"
+       class="rounded px-2 py-1 text-decoration-none {% if request.GET.sort == 'best_seller' %}border border-primary bg-primary text-white{% else %}border bg-white text-dark{% endif %}">
         <i class="bi bi-fire"></i> Bán chạy
     </a>
 </div>
+
 {% include "store/partials/product_list.html" with products=products layout="gird" %}
 {% endblock %}
