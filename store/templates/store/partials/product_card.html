@@ -21,9 +21,6 @@
                         <span class="text-muted text-decoration-line-through small me-1">
                             {{ product.default_price|currency }}
                         </span>
-                        <span class="badge bg-danger small">
-                            -{{ ((product.default_price|floatformat:2|floatval - product.get_variant.price|floatformat:2|floatval) / product.default_price|floatformat:2|floatval) |floatformat:0 }}%
-                        </span>
                     {% endif %}
                 </p>
 
