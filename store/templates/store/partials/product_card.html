@@ -14,7 +14,16 @@
                     {{ product.name }}
                 </h6>
 
-                <p class="text-danger fw-bold mb-0">{{ product.get_variant.price|currency }}</p>
+                <p class="mb-0">
+                    <span class="text-danger fw-bold me-1">{{ product.get_variant.price|currency }}</span>
+
+                    {% if product.default_price and product.default_price > product.get_variant.price %}
+                        <span class="text-muted text-decoration-line-through small">
+                            {{ product.default_price|currency }}
+                        </span>
+                    {% endif %}
+                </p>
+
                 <div>
                     {% if product.average_star > 0 %}
                         <span class="text-dark small align-items-center gap-1">
