@@ -16,9 +16,7 @@
     {% else %} {# Default: grid #}
         <div class="row g-2">
             {% for product in products %}
-                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-                    {% include "store/partials/product_card.html" with product=product %}
-                </div>
+                {% include "store/partials/product_card.html" with product=product %}
             {% endfor %}
         </div>
     {% endif %}
