@@ -73,17 +73,48 @@ def product_detail_view(request, category_slug, product_slug):
     })
 
 def category_products_view(request, category_slug=None):
+    category = None
+    brand = None
+
+    products = Product.objects.filter(is_active=True)
 
     if category_slug:
-
         category = Category.objects.filter(slug=category_slug).first()
-
-        if category:
-            products = Product.objects.filter(category=category, is_active=True)
-        else:
+        if not category:
             return render(request, 'store/404.html', status=404)
+        products = products.filter(category=category)
 
-        return render(request, 'store/products.html', {'products': products, 'category': category})
+    # Filter theo hãng
+    brand_id = request.GET.get('brand')
+    if brand_id:
+        brand = Brand.objects.filter(id=brand_id).first()
+        if brand:
+            products = products.filter(brand=brand)
+
+    # Sắp xếp
+    sort = request.GET.get('sort')
+    if sort == 'price_asc':
+        products = products.order_by('variants__price')
+    elif sort == 'price_desc':
+        products = products.order_by('-variants__price')
+    elif sort == 'best_seller':
+        products = products.order_by('-sold')
+    elif sort == 'new':
+        products = products.order_by('-created_at')
+    else:
+        products = products.order_by('-view_count')
+
+    if category:
+        all_brands = Brand.objects.filter(products__category=category, products__is_active=True).distinct()
+    else:
+        all_brands = Brand.objects.filter(products__is_active=True).distinct()
+
+    return render(request, 'store/products.html', {
+        'products': products,
+        'category': category,
+        'brand': brand,
+        'all_brands': all_brands,
+    })
 
 def cart_view(request):
     return render(request, 'store/cart.html', )
