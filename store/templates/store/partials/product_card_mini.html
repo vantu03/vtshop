@@ -1,0 +1,9 @@
+
+{% load format_filters %}
+<li class="list-group-item d-flex align-items-center gap-2">
+    <img src="{{ product.thumbnail.image.url }}" width="40" height="40" style="object-fit: contain;">
+    <div>
+        <div class="small">{{ product.name|truncatechars:25 }}</div>
+        <div class="text-danger fw-bold small">{{ product.get_variant.price|currency }}</div>
+    </div>
+</li>

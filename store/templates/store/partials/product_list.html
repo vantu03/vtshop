@@ -1,0 +1,27 @@
+{% if products %}
+    {% if layout == "horizontal" %}
+        <div class="d-flex overflow-auto gap-2">
+            {% for product in products %}
+                {% include "store/partials/product_card_horizontal.html" with product=product %}
+            {% endfor %}
+        </div>
+
+    {% elif layout == "mini" %}
+        <ul class="list-group">
+            {% for product in products %}
+                {% include "store/partials/product_card_mini.html" with product=product %}
+            {% endfor %}
+        </ul>
+
+    {% else %} {# Default: grid #}
+        <div class="row g-2">
+            {% for product in products %}
+                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                    {% include "store/partials/product_card_grid.html" with product=product %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% else %}
+    <p>Không có sản phẩm nào.</p>
+{% endif %}
