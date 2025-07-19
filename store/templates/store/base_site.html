@@ -113,13 +113,8 @@
             <div class="container d-flex align-items-center justify-content-between flex-nowrap">
                 <!-- Logo -->
                 <a class="navbar-brand" href="{% url 'home' %}">
-                    <!-- Logo dành cho màn hình nhỏ (xs, sm) -->
-                    <img src="{% static 'logo1.svg' %}" alt="Logo nhỏ" height="40" class="d-block d-md-none">
-
-                    <!-- Logo dành cho màn hình trung bình trở lên (md, lg, xl) -->
-                    <img src="{% static 'logo2.svg' %}" alt="Logo lớn" height="40" class="d-none d-md-block">
-
-
+                    <img src="{% static 'logo2.svg' %}" alt="Logo" height="40" class="d-none d-md-inline">
+                    <img src="{% static 'logo1.svg' %}" alt="Logo" height="40">
                 </a>
 
                 <!-- Tìm kiếm -->
