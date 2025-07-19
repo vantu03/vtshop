@@ -8,8 +8,8 @@
     </linearGradient>
   </defs>
 
-  <text x="50" y="38"
-        font-size="20"
+  <text x="50" y="35"
+        font-size="24"
         font-family="Arial, sans-serif"
         fill="url(#blueLightGradient)"
         font-weight="bold"
