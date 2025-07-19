@@ -132,7 +132,7 @@
         <!-- Ảnh sản phẩm -->
         <div class="col-md-7 p-4">
             <!-- Carousel chứa toàn bộ ảnh -->
-            <div id="productCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
+            <div id="productCarousel" class="carousel slide mb-3 border rounded p-2" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     {% for img in images %}
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
@@ -179,7 +179,7 @@
 
             <div class="p-3 bg-light border rounded d-inline-block mb-3 w-100">
 
-                <span class="text-danger h4 fw-bold d-flex align-items-center mb-0">
+                <span class="text-danger h4 fw-bold d-flex flex-wrap align-items-center mb-0">
                     <i class="bi bi-tag-fill me-2"></i>
                     <span class="me-2">{{ variant.price|currency }}</span>
                     {% if product.default_price and product.default_price > variant.price %}
