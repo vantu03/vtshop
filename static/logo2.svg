@@ -1,17 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="100" height="40" viewBox="0 0 100 40">
   <defs>
-    <!-- Gradient xanh biển sáng - đậm -->
-    <linearGradient id="blueLightGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#222"/>   <!-- sáng trên -->
-      <stop offset="100%" stop-color="#000"/> <!-- đậm dưới -->
-      
+    <!-- Gradient đen sáng → đen đậm -->
+    <linearGradient id="blackGlossyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#444" />
+      <stop offset="100%" stop-color="#000" />
     </linearGradient>
   </defs>
 
-  <text x="50" y="35"
-        font-size="24"
+  <text x="50" y="32"
+        font-size="22"
         font-family="Arial, sans-serif"
-        fill="url(#blueLightGradient)"
+        fill="url(#blackGlossyGradient)"
         font-weight="bold"
         text-anchor="middle">
     Phụ Kiện
