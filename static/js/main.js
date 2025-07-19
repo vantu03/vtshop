@@ -37,3 +37,23 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+document.addEventListener('DOMContentLoaded', function () {
+    const header = document.getElementById('mainHeader');
+    const stickyOffset = 80; // px
+    const body = document.body;
+
+    window.addEventListener('scroll', function () {
+        if (window.scrollY > stickyOffset) {
+            header.classList.add('fixed-top');
+            if (!document.querySelector('.sticky-offset')) {
+                const offsetDiv = document.createElement('div');
+                offsetDiv.className = 'sticky-offset';
+                header.parentNode.insertBefore(offsetDiv, header.nextSibling);
+            }
+        } else {
+            header.classList.remove('fixed-top');
+            const offsetDiv = document.querySelector('.sticky-offset');
+            if (offsetDiv) offsetDiv.remove();
+        }
+    });
+});
