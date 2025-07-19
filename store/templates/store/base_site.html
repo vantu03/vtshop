@@ -113,46 +113,12 @@
             <div class="container d-flex align-items-center justify-content-between flex-nowrap">
                 <!-- Logo -->
                 <a class="navbar-brand" href="{% url 'home' %}">
-                    <!--<img src="{% static 'logo.png' %}" alt="Logo" height="40">-->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 64 64">
-                    <defs>
-                    <!-- Gradient ngọc bích -->
-                    <linearGradient id="jadeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#38ef7d"/>
-                    <stop offset="100%" stop-color="#11998e"/>
-                    </linearGradient>
-                    </defs>
+                    <!-- Logo dành cho màn hình nhỏ (xs, sm) -->
+                    <img src="{% static 'logo1.svg' %}" alt="Logo nhỏ" height="40" class="d-block d-md-none">
 
-                    <!-- Nền hình vuông bo tròn -->
-                    <rect x="2" y="2" width="60" height="60" rx="12" fill="url(#jadeGradient)" />
+                    <!-- Logo dành cho màn hình trung bình trở lên (md, lg, xl) -->
+                    <img src="{% static 'logo2.svg' %}" alt="Logo lớn" height="40" class="d-none d-md-block">
 
-                    <!-- Chữ S lớn -->
-                    <text x="3" y="50"
-                    font-size="52"
-                    font-family="Arial, sans-serif"
-                    fill="white"
-                    font-weight="bold">
-                    S
-                    </text>
-
-                    <!-- Chữ ố -->
-                    <text x="35" y="50"
-                    font-size="18"
-                    font-family="Arial, sans-serif"
-                    fill="white"
-                    font-weight="bold">
-                    ố
-                    </text>
-
-                    <!-- Số 1 -->
-                    <text x="42" y="50"
-                    font-size="42"
-                    font-family="Arial, sans-serif"
-                    fill="white"
-                    font-weight="bold">
-                    1
-                    </text>
-                    </svg>
 
                 </a>
 

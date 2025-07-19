@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="40" viewBox="0 0 88 64">
+  <defs>
+    <!-- Gradient ngọc bích -->
+    <linearGradient id="jadeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38ef7d"/>
+      <stop offset="100%" stop-color="#11998e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Chữ "Phụ Kiện" bên trái: trắng viền đen -->
+  <text x="-100" y="50"
+        font-size="28"
+        font-family="Arial, sans-serif"
+        fill="white"
+        stroke="black"
+        stroke-width="0.5"
+        font-weight="bold">
+    Phụ Kiện
+  </text>
+
+  <!-- Khung vuông bo tròn chứa "Số1" -->
+  <g transform="translate(26,0)">
+    <rect x="2" y="2" width="60" height="60" rx="12" fill="url(#jadeGradient)" />
+
+    <!-- Chữ S lớn -->
+    <text x="3" y="50"
+          font-size="52"
+          font-family="Arial, sans-serif"
+          fill="white"
+          font-weight="bold">
+      S
+    </text>
+
+    <!-- Chữ ố -->
+    <text x="35" y="50"
+          font-size="18"
+          font-family="Arial, sans-serif"
+          fill="white"
+          font-weight="bold">
+      ố
+    </text>
+
+    <!-- Số 1 -->
+    <text x="42" y="50"
+          font-size="42"
+          font-family="Arial, sans-serif"
+          fill="white"
+          font-weight="bold">
+      1
+    </text>
+  </g>
+</svg>
