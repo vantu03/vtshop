@@ -109,49 +109,46 @@
     <header class="sticky-top">
 
         <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-            <div class="container d-flex flex-nowrap align-items-center justify-content-between gap-2">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container d-flex align-items-center justify-content-between flex-wrap">
 
-                <!-- Logo -->
-                <a class="navbar-brand d-flex align-items-center mb-lg-0" href="/" style="text-decoration: none;">
-                    <img src="{% static 'logo.png' %}" alt="{{ SITE_NAME }} logo" height="40" class="rounded shadow-sm">
-                    <div class="d-flex flex-column d-none">
-                        <span class="fw-bold fs-5 text-primary" style="letter-spacing: 0.5px;">{{ BRAND_NAME }}</span>
-                    </div>
-                </a>
+        <!-- Logo -->
+        <a class="navbar-brand" href="/">
+            <img src="{% static 'logo.png' %}" alt="Logo" height="40">
+        </a>
 
-                <!-- Tìm kiếm -->
-                <form action="{% url 'search' %}" method="get" class="flex-fill">
-                    <div class="input-group">
-                        <input type="text" class="form-control search-input" name="keyword" placeholder="Tìm kiếm sản phẩm..." aria-label="Tìm kiếm">
-                        <button class="btn btn-outline-secondary" type="submit">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </form>
-
-                <!-- Navbar toggler -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-                    <span class="navbar-toggler-icon"></span>
+        <!-- Tìm kiếm: Luôn hiện, không trong collapse -->
+        <form action="{% url 'search' %}" method="get" class="flex-fill mx-3 my-2 my-lg-0">
+            <div class="input-group">
+                <input type="text" class="form-control" name="keyword" placeholder="Tìm kiếm sản phẩm...">
+                <button class="btn btn-outline-secondary" type="submit">
+                    <i class="bi bi-search"></i>
                 </button>
-
-                <!-- Menu -->
-                <div class="collapse navbar-collapse mt-2 mt-lg-0" id="mainNavbar">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/"><i class="bi bi-house-door"></i> Trang chủ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'cart' %}">
-                                <i class="bi bi-cart"></i> Giỏ hàng
-                                <span id="cartItemCount" class="badge bg-danger rounded-pill small translate-middle" style="display:none;">0</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
             </div>
-        </nav>
+        </form>
+
+        <!-- Toggler -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menu trong collapse -->
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="bi bi-house-door"></i> Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'cart' %}">
+                        <i class="bi bi-cart"></i> Giỏ hàng
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
 
     </header>
 
