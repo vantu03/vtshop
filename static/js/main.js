@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const clearBtn = document.createElement('button');
         clearBtn.type = 'button';
         clearBtn.innerHTML = '&times;';
-        clearBtn.className = 'position-absolute end-0 top-50 translate-middle-y me-2 d-none';
+        clearBtn.className = 'position-absolute end-0 top-50 translate-middle-y me-2 d-none text-danger';
         clearBtn.style.zIndex = '10';
 
         input.parentNode.insertBefore(wrapper, input);
