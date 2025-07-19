@@ -4,7 +4,7 @@
 {% load format_filters %}
 {% block content %}
 
-<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="mb-3">
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Trang chủ</a></li>
         {% if category %}
@@ -17,7 +17,7 @@
     </ol>
 </nav>
 
-<section class="bg-white shadow-sm p-4">
+<section class="bg-white shadow-sm p-4 mt-4">
 
     <h1 class="fw-bold mb-4">
         {% if category %}

@@ -96,14 +96,14 @@
 {% block content %}
 
 
-<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="mb-3">
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Trang chủ</a></li>
         <li class="breadcrumb-item"><a href="{% url 'category_products' category_slug=product.category.slug %}" class="text-decoration-none">{{ product.category.name }}</a></li>
     </ol>
 </nav>
 
-<section class="bg-white shadow-sm p-4">
+<section class="bg-white shadow-sm p-4 mt-4">
 
     <div class="row">
         <!-- Tiêu đề sản phẩm + nút chia sẻ cùng hàng -->
