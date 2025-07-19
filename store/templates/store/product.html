@@ -102,158 +102,156 @@
     </ol>
 </nav>
 
+<section class="bg-white shadow-sm row">
 
-<section class="">
-    <div class="bg-white shadow-sm row">
+    <!-- Tiêu đề sản phẩm + nút chia sẻ cùng hàng -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-2">
+        <!-- Tiêu đề -->
+        <h1 class="fw-bold mb-0">{{ product.name }}</h1>
 
-        <!-- Tiêu đề sản phẩm + nút chia sẻ cùng hàng -->
-        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-2">
-            <!-- Tiêu đề -->
-            <h1 class="fw-bold mb-0">{{ product.name }}</h1>
+        <!-- Nhóm nút chia sẻ -->
+        <div class="d-flex align-items-center gap-2">
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ SITE_DOMAIN }}{{ request.path }}"
+               target="_blank" rel="noopener nofollow"
+               class="btn btn-sm btn-outline-primary rounded-circle"
+               title="Chia sẻ Facebook">
+                <i class="bi bi-facebook"></i>
+            </a>
 
-            <!-- Nhóm nút chia sẻ -->
-            <div class="d-flex align-items-center gap-2">
-                <!-- Facebook -->
-                <a href="https://www.facebook.com/sharer/sharer.php?u={{ SITE_DOMAIN }}{{ request.path }}"
-                   target="_blank" rel="noopener nofollow"
-                   class="btn btn-sm btn-outline-primary rounded-circle"
-                   title="Chia sẻ Facebook">
-                    <i class="bi bi-facebook"></i>
-                </a>
-
-                <!-- Share hệ thống -->
-                <button type="button"
-                        class="btn btn-sm btn-outline-primary rounded-circle"
-                        onclick="shareNative()"
-                        title="Chia sẻ hệ thống (nếu được hỗ trợ)">
-                    <i class="bi bi-share-fill"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Ảnh sản phẩm -->
-        <div class="col-md-7 p-4">
-            <!-- Carousel chứa toàn bộ ảnh -->
-            <div id="productCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    {% for img in images %}
-                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                        <img src="{{ img.url }}"
-                             class="d-block w-100 rounded"
-                             style="height: 250px; object-fit: contain; cursor: pointer;"
-                             alt="{{ img.alt_text }}"
-                             data-bs-toggle="modal"
-                             data-bs-target="#imageModal"
-                             data-img-url="{{ img.url }}">
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
-
-
-            </div>
-
-            <!-- Ảnh nhỏ điều khiển carousel -->
-            <div class="py-1">
-                <div class="d-flex justify-content-center gap-2 overflow-auto">
-                    {% for img in images %}
-                    <img src="{{ img.url }}" alt="{{ img.alt_text }}"
-                         class="img-thumbnail"
-                         style="width: 50px; height: 50px; object-fit: cover; cursor: pointer;"
-                         data-bs-target="#productCarousel"
-                         data-bs-slide-to="{{ forloop.counter0 }}"
-                         {% if forloop.first %}class="active"{% endif %}>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-
-        <!-- Thông tin sản phẩm -->
-        <div class="col-md-5 p-4">
-
-            {% load format_filters %}
-
-            <div class="p-3 bg-light border rounded d-inline-block mb-3 w-100">
-
-                <span class="text-danger h4 fw-bold d-flex align-items-center mb-0">
-                    <i class="bi bi-tag-fill me-2"></i>
-                    <span class="me-2">{{ variant.price|currency }}</span>
-                    {% if product.default_price and product.default_price > variant.price %}
-                    <span class="text-muted text-decoration-line-through me-2">
-                        {{ product.default_price|currency }}
-                    </span>
-                    {% endif %}
-                </span>
-            </div>
-            {% if product.variants.count > 1 %}
-                <div class="mb-3">
-                    <div class="d-flex flex-wrap gap-2 mt-1 overflow-y-auto" style="max-height: 200px;">
-                        {% for v in product.variants.all %}
-                            <a class="btn border-secondary rounded-pill
-                                       {% if v == variant %} active bg-primary bg-opacity-10 text-primary border-primary {% endif %}"
-                               href="{% url 'product_detail' category_slug=product.category.slug product_slug=product.slug %}?variant={{ v.id }}">
-                                {{ v.name|safe }}
-                            </a>
-
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endif %}
-
-            <div class="d-grid gap-2">
-                <button class="btn btn-danger btn-lg w-100"
-                        id="buyBtn"
-                        data-variant-id="{{ variant.id }}">
-                    Mua ngay
-                </button>
-
-                <button
-                   class="btn btn-outline-primary btn-lg w-100 d-flex align-items-center justify-content-center gap-2"
-                   id="addToCartBtn"
-                   data-variant-id="{{ variant.id }}">
-                    <i class="bi bi-cart-plus"></i>
-                    Thêm vào giỏ hàng
-                </button>
-
-            </div>
-
-            {% if product.sold > 0 %}
-                <div class="mt-2 small text-muted">
-                    Đã bán: {{ product.sold|smart_number }}
-                </div>
-            {% endif %}
-
-
-            {% if product.contents.all %}
-                <ul class="nav small mb-2 mt-2">
-                    {% for content in product.contents.all %}
-                        {% if content.is_active %}
-                            <li class="nav-item me-3">
-                                <a class="nav-link p-0" href="#content-{{ content.content_type }}">
-                                    {{ content.get_content_type_display }}
-                                </a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
-
-            <div class="mb-2 mt-2">
-                <h6 class="text-dark fw-bold">Khuyến mãi</h6>
-                <ul class="small text-muted ps-3">
-                    <li>Chưa có khuyến mãi nào</li>
-                </ul>
-            </div>
-
+            <!-- Share hệ thống -->
+            <button type="button"
+                    class="btn btn-sm btn-outline-primary rounded-circle"
+                    onclick="shareNative()"
+                    title="Chia sẻ hệ thống (nếu được hỗ trợ)">
+                <i class="bi bi-share-fill"></i>
+            </button>
         </div>
     </div>
+
+    <!-- Ảnh sản phẩm -->
+    <div class="col-md-7 p-4">
+        <!-- Carousel chứa toàn bộ ảnh -->
+        <div id="productCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for img in images %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img src="{{ img.url }}"
+                         class="d-block w-100 rounded"
+                         style="height: 250px; object-fit: contain; cursor: pointer;"
+                         alt="{{ img.alt_text }}"
+                         data-bs-toggle="modal"
+                         data-bs-target="#imageModal"
+                         data-img-url="{{ img.url }}">
+                </div>
+                {% endfor %}
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+
+
+        </div>
+
+        <!-- Ảnh nhỏ điều khiển carousel -->
+        <div class="py-1">
+            <div class="d-flex justify-content-center gap-2 overflow-auto">
+                {% for img in images %}
+                <img src="{{ img.url }}" alt="{{ img.alt_text }}"
+                     class="img-thumbnail"
+                     style="width: 50px; height: 50px; object-fit: cover; cursor: pointer;"
+                     data-bs-target="#productCarousel"
+                     data-bs-slide-to="{{ forloop.counter0 }}"
+                     {% if forloop.first %}class="active"{% endif %}>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Thông tin sản phẩm -->
+    <div class="col-md-5 p-4">
+
+        {% load format_filters %}
+
+        <div class="p-3 bg-light border rounded d-inline-block mb-3 w-100">
+
+            <span class="text-danger h4 fw-bold d-flex align-items-center mb-0">
+                <i class="bi bi-tag-fill me-2"></i>
+                <span class="me-2">{{ variant.price|currency }}</span>
+                {% if product.default_price and product.default_price > variant.price %}
+                <span class="text-muted text-decoration-line-through me-2">
+                    {{ product.default_price|currency }}
+                </span>
+                {% endif %}
+            </span>
+        </div>
+        {% if product.variants.count > 1 %}
+            <div class="mb-3">
+                <div class="d-flex flex-wrap gap-2 mt-1 overflow-y-auto" style="max-height: 200px;">
+                    {% for v in product.variants.all %}
+                        <a class="btn border-secondary rounded-pill
+                                   {% if v == variant %} active bg-primary bg-opacity-10 text-primary border-primary {% endif %}"
+                           href="{% url 'product_detail' category_slug=product.category.slug product_slug=product.slug %}?variant={{ v.id }}">
+                            {{ v.name|safe }}
+                        </a>
+
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="d-grid gap-2">
+            <button class="btn btn-danger btn-lg w-100"
+                    id="buyBtn"
+                    data-variant-id="{{ variant.id }}">
+                Mua ngay
+            </button>
+
+            <button
+               class="btn btn-outline-primary btn-lg w-100 d-flex align-items-center justify-content-center gap-2"
+               id="addToCartBtn"
+               data-variant-id="{{ variant.id }}">
+                <i class="bi bi-cart-plus"></i>
+                Thêm vào giỏ hàng
+            </button>
+
+        </div>
+
+        {% if product.sold > 0 %}
+            <div class="mt-2 small text-muted">
+                Đã bán: {{ product.sold|smart_number }}
+            </div>
+        {% endif %}
+
+
+        {% if product.contents.all %}
+            <ul class="nav small mb-2 mt-2">
+                {% for content in product.contents.all %}
+                    {% if content.is_active %}
+                        <li class="nav-item me-3">
+                            <a class="nav-link p-0" href="#content-{{ content.content_type }}">
+                                {{ content.get_content_type_display }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+
+        <div class="mb-2 mt-2">
+            <h6 class="text-dark fw-bold">Khuyến mãi</h6>
+            <ul class="small text-muted ps-3">
+                <li>Chưa có khuyến mãi nào</li>
+            </ul>
+        </div>
+
+    </div>
+</section>
 
     {% for content in product.contents.all %}
         {% if content.is_active %}
@@ -351,8 +349,6 @@
     </section>
     {% endif %}
 
-
-</section >
 
 <!-- Modal đánh giá -->
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
