@@ -2,8 +2,8 @@
   <defs>
     <!-- Gradient xanh biển sáng - đậm -->
     <linearGradient id="blueLightGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#fff"/>   <!-- sáng trên -->
-      <stop offset="100%" stop-color="#fff"/> <!-- đậm dưới -->
+      <stop offset="0%" stop-color="#00BFFF"/> <!-- sáng trên -->
+      <stop offset="100%" stop-color="#0077BE"/> <!-- đậm dưới -->
     </linearGradient>
   </defs>
 
@@ -11,6 +11,8 @@
         font-size="20"
         font-family="Arial, sans-serif"
         fill="url(#blueLightGradient)"
+        stroke="black"
+        stroke-width="0.8"
         font-weight="bold"
         text-anchor="middle">
     Phụ Kiện
