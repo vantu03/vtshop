@@ -115,13 +115,13 @@
                 <!-- Logo -->
                 <a class="navbar-brand d-flex align-items-center gap-2 mb-2 mb-lg-0" href="/" style="text-decoration: none;">
                     <img src="{% static 'logo.png' %}" alt="{{ SITE_NAME }} logo" height="40" class="rounded shadow-sm">
-                    <div class="d-flex flex-column">
+                    <div class="d-flex flex-column d-none">
                         <span class="fw-bold fs-5 text-primary" style="letter-spacing: 0.5px;">{{ BRAND_NAME }}</span>
                     </div>
                 </a>
 
-                <!-- Tìm kiếm - hiện cạnh logo trên màn to -->
-                <form action="{% url 'search' %}" method="get" class="d-none d-lg-flex flex-fill ms-3 me-2">
+                <!-- Tìm kiếm -->
+                <form action="{% url 'search' %}" method="get" class="flex-fill ms-3 me-2">
                     <div class="input-group">
                         <input type="text" class="form-control search-input" name="keyword" placeholder="Tìm kiếm sản phẩm..." aria-label="Tìm kiếm">
                         <button class="btn btn-outline-secondary" type="submit">
@@ -160,17 +160,7 @@
         <div class="container">
 
             <!-- Hàng chứa tìm kiếm + icon danh mục (màn nhỏ) -->
-            <!-- Hàng chứa tìm kiếm + icon danh mục (màn nhỏ) -->
             <div class="d-flex d-lg-none align-items-stretch gap-2 mb-2">
-                <!-- Form tìm kiếm -->
-                <form action="{% url 'search' %}" method="get" class="flex-grow-1">
-                    <div class="input-group h-100">
-                        <input type="text" class="form-control search-input" name="keyword" placeholder="Tìm kiếm sản phẩm...">
-                        <button class="btn btn-outline-secondary" type="submit">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </form>
 
                 <!-- Nút toggle danh mục -->
                 <button class="btn btn-outline-dark d-lg-none rounded"
