@@ -17,11 +17,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const wrapper = document.createElement('div');
         wrapper.className = 'position-relative w-100';
 
-        const clearBtn = document.createElement('span');
-        clearBtn.className = 'position-absolute end-0 top-50 translate-middle-y me-2 d-none text-danger fw-bold fs-4';
+        const clearBtn = document.createElement('i');
+        clearBtn.className = 'bi bi-x-lg position-absolute end-0 top-50 translate-middle-y me-2 d-none text-secondary fs-5';
         clearBtn.style.cursor = 'pointer';
-        clearBtn.textContent = 'X'; // Viết hoa
-        clearBtn.style.zIndex = '10';
+        clearBtn.setAttribute('role', 'button');
 
         input.parentNode.insertBefore(wrapper, input);
         wrapper.appendChild(input);
