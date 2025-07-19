@@ -1,6 +1,6 @@
 {% extends "store/base_site.html" %}
 {% load format_filters %}
 {% block content %}
-<h2 class="fw-bold mb-4 mt-4">Gợi ý cho bạn</h2>
+<h2 class="fw-bold mb-4">Gợi ý cho bạn</h2>
 {% include "store/partials/product_list.html" with products=new_products layout="grid" %}
 {% endblock %}
