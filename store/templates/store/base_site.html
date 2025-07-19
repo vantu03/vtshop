@@ -106,8 +106,8 @@
             <p class="mb-0 text-muted small">{{ SITE_DESCRIPTION }}</p>
         </div>
     </div>-->
-    <header class="sticky-top">
 
+    <header class="sticky-top">
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
             <div class="container d-flex align-items-center justify-content-between flex-nowrap">
@@ -123,17 +123,19 @@
                         <button class="btn btn-outline-secondary" type="submit">
                             <i class="bi bi-search"></i>
                         </button>
-
-                            <a href="{% url 'cart' %}">
-                                <i class="bi bi-cart"></i> Giỏ hàng
-                            </a>
                     </div>
                 </form>
+
+                <!-- Giỏ hàng -->
+                <div class="my-2 my-lg-0">
+                    <a href="{% url 'cart' %}" class="btn btn-outline-primary">
+                        <i class="bi bi-cart"></i> Giỏ hàng
+                    </a>
+                </div>
             </div>
         </nav>
-
-
     </header>
+
 
     <!-- DANH MỤC NGANG -->
     <div class="py-2 border-top border-bottom bg-white">
