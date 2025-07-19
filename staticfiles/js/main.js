@@ -39,21 +39,25 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 document.addEventListener('DOMContentLoaded', function () {
     const header = document.getElementById('mainHeader');
-    const stickyOffset = 80; // px
-    const body = document.body;
+    let lastScrollTop = 0;
 
     window.addEventListener('scroll', function () {
-        if (window.scrollY > stickyOffset) {
+        const currentScroll = window.scrollY;
+
+        if (currentScroll > lastScrollTop && currentScroll > 100) {
+            // Cuộn xuống => ẩn
+            header.classList.add('fixed-top', 'header-hidden');
+        } else if (currentScroll < lastScrollTop) {
+            // Cuộn lên => hiện
             header.classList.add('fixed-top');
-            if (!document.querySelector('.sticky-offset')) {
-                const offsetDiv = document.createElement('div');
-                offsetDiv.className = 'sticky-offset';
-                header.parentNode.insertBefore(offsetDiv, header.nextSibling);
-            }
-        } else {
-            header.classList.remove('fixed-top');
-            const offsetDiv = document.querySelector('.sticky-offset');
-            if (offsetDiv) offsetDiv.remove();
+            header.classList.remove('header-hidden');
         }
+
+        // Nếu lên lại top thì bỏ sticky luôn
+        if (currentScroll <= 0) {
+            header.classList.remove('fixed-top', 'header-hidden');
+        }
+
+        lastScrollTop = currentScroll;
     });
 });

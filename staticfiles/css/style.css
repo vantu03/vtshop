@@ -2,12 +2,18 @@
     background: linear-gradient(90deg, #38ef7d 0%, #11998e 100%);
     color: white; /* nếu chữ cần trắng cho dễ đọc */
 }
-/* Giữ khoảng trống khi header chuyển sang fixed */
-.sticky-offset {
-    height: 80px; /* chiều cao của navbar, tuỳ chỉnh */
+#mainHeader {
+    transition: transform 0.3s ease-in-out;
+    will-change: transform;
+    z-index: 1030; /* giống Bootstrap navbar */
 }
 
-/* Thêm hiệu ứng mượt */
+.header-hidden {
+    transform: translateY(-100%);
+}
+
 .fixed-top {
-    transition: top 0.3s ease-in-out;
+    position: fixed;
+    top: 0;
+    width: 100%;
 }
