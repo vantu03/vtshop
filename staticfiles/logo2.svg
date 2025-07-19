@@ -2,13 +2,13 @@
   <defs>
     <!-- Gradient xanh biển sáng - đậm -->
     <linearGradient id="blueLightGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#b3ecff"/>   <!-- sáng trên -->
-      <stop offset="100%" stop-color="#007acc"/> <!-- đậm dưới -->
+      <stop offset="0%" stop-color="#fff"/>   <!-- sáng trên -->
+      <stop offset="100%" stop-color="#fff"/> <!-- đậm dưới -->
       
     </linearGradient>
   </defs>
 
-  <text x="50" y="28"
+  <text x="50" y="40"
         font-size="20"
         font-family="Arial, sans-serif"
         fill="url(#blueLightGradient)"
