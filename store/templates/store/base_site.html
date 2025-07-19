@@ -111,21 +111,22 @@
         <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
     <div class="container d-flex align-items-center justify-content-between flex-wrap">
+        <div>
+            <!-- Logo -->
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'logo.png' %}" alt="Logo" height="40">
+            </a>
 
-        <!-- Logo -->
-        <a class="navbar-brand" href="/">
-            <img src="{% static 'logo.png' %}" alt="Logo" height="40">
-        </a>
-
-        <!-- Tìm kiếm: Luôn hiện, không trong collapse -->
-        <form action="{% url 'search' %}" method="get" class="flex-fill mx-3 my-2 my-lg-0">
-            <div class="input-group">
-                <input type="text" class="form-control" name="keyword" placeholder="Tìm kiếm sản phẩm...">
-                <button class="btn btn-outline-secondary" type="submit">
-                    <i class="bi bi-search"></i>
-                </button>
-            </div>
-        </form>
+            <!-- Tìm kiếm: Luôn hiện, không trong collapse -->
+            <form action="{% url 'search' %}" method="get" class="flex-fill mx-3 my-2 my-lg-0">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="keyword" placeholder="Tìm kiếm sản phẩm...">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
 
         <!-- Toggler -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
@@ -136,7 +137,7 @@
         <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/"><i class="bi bi-house-door"></i> Trang chủ</a>
+                    <a class="nav-link" href="{% url 'home' %}"><i class="bi bi-house-door"></i> Trang chủ</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'cart' %}">
