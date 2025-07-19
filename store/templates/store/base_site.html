@@ -159,25 +159,7 @@
     <div class="py-2 border-top border-bottom bg-white">
         <div class="container">
 
-            <!-- Hàng chứa tìm kiếm + icon danh mục (màn nhỏ) -->
-            <div class="d-flex d-lg-none align-items-stretch gap-2 mb-2">
-
-                <!-- Nút toggle danh mục -->
-                <button class="btn btn-outline-dark d-lg-none rounded"
-                        type="button"
-                        style="min-width: 48px;"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#categoryCollapse"
-                        aria-controls="categoryCollapse"
-                        aria-expanded="false"
-                        aria-label="Hiện danh mục">
-                    <i class="bi bi-grid-3x3-gap-fill fs-5"></i>
-                </button>
-            </div>
-
-
            <!-- Danh mục (scroll ngang) -->
-            <div class="collapse d-lg-block mt-2" id="categoryCollapse">
                 <div class="d-flex overflow-auto gap-2" style="white-space: nowrap;">
                     {% for cat in header_categories %}
                         <a href="{% url 'category_products' category_slug=cat.slug %}"
@@ -189,7 +171,6 @@
                         <span class="text-muted">Chưa có danh mục</span>
                     {% endfor %}
                 </div>
-            </div>
 
 
         </div>
