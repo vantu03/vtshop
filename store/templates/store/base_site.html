@@ -112,10 +112,11 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-gradient-jade shadow-sm">
             <div class="container d-flex align-items-center justify-content-between flex-nowrap">
                 <!-- Logo -->
-                <a class="navbar-brand" href="{% url 'home' %}">
+                <a class="navbar-brand d-flex align-items-center gap-0" href="{% url 'home' %}">
                     <img src="{% static 'logo2.svg' %}" alt="Logo" height="40" class="d-none d-md-inline">
                     <img src="{% static 'logo1.svg' %}" alt="Logo" height="40">
                 </a>
+
 
                 <!-- Tìm kiếm -->
                 <form action="{% url 'search' %}" method="get" class="flex-fill mx-3 my-2 my-lg-0">
