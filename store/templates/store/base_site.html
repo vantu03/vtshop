@@ -128,29 +128,31 @@
                     </form>
                 </div>
 
-                <!-- Toggler -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+
+                <!-- Nút mở offcanvas -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <!-- Menu trong collapse -->
-                <div class="collapse navbar-collapse" id="mainNavbar">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'home' %}"><i class="bi bi-house-door"></i> Trang chủ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'cart' %}">
-                                <i class="bi bi-cart"></i> Giỏ hàng
-                            </a>
-                        </li>
-                    </ul>
+                <!-- Menu offcanvas -->
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title">Menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'home' %}"><i class="bi bi-house-door"></i> Trang chủ</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'cart' %}"><i class="bi bi-cart"></i> Giỏ hàng</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-
             </div>
         </nav>
-
-
     </header>
 
     <!-- DANH MỤC NGANG -->
