@@ -15,7 +15,7 @@ class CartManager {
 
         for (let item of this.cart) {
             const wrapper = document.createElement('div');
-            wrapper.className = 'bg-white shadow-sm p-3 rounded';
+            wrapper.className = 'border p-3 rounded';
             wrapper.dataset.variantId = item.variant_id;
             this.cartContainer.appendChild(wrapper);
 
