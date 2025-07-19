@@ -17,8 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const wrapper = document.createElement('div');
         wrapper.className = 'position-relative w-100';
 
-        const clearBtn = document.createElement('button');
-        clearBtn.type = 'button';
+        const clearBtn = document.createElement('span');
         clearBtn.innerHTML = '&times;';
         clearBtn.className = 'position-absolute end-0 top-50 translate-middle-y me-2 d-none text-danger';
         clearBtn.style.zIndex = '10';
