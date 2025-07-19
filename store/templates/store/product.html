@@ -253,101 +253,101 @@
     </div>
 </section>
 
-    {% for content in product.contents.all %}
-        {% if content.is_active %}
-            <section id="content-{{ content.content_type }}" class="bg-white shadow-sm p-4 mt-4">
-                <h2 class="fw-bold text-primary">
-                    {{ content.get_content_type_display }} {{ product.name }}
-                </h2>
-                <div class="mt-2">{{ content.content|safe }}</div>
-            </section>
-        {% endif %}
-    {% endfor %}
+{% for content in product.contents.all %}
+    {% if content.is_active %}
+        <section id="content-{{ content.content_type }}" class="bg-white shadow-sm mt-4">
+            <h2 class="fw-bold text-primary">
+                {{ content.get_content_type_display }} {{ product.name }}
+            </h2>
+            <div class="mt-2">{{ content.content|safe }}</div>
+        </section>
+    {% endif %}
+{% endfor %}
 
-    <section class="bg-white shadow-sm p-4 mt-4">
-        <h5 class="fw-bold">Đánh giá {{ product.name }}</h5>
+<section class="bg-white shadow-sm mt-4">
+    <h5 class="fw-bold">Đánh giá {{ product.name }}</h5>
 
-        {% if product.star_details.total > 0 %}
-            <div class="row pt-2">
+    {% if product.star_details.total > 0 %}
+        <div class="row pt-2">
 
-                <!-- Trung bình sao (trái) -->
-                <div class="col-md-auto d-flex">
-                    <div class="text-center">
-                        <div class="fs-1 fw-bold">
-                            <i class="bi bi-star-fill text-warning"></i> {{ product.average_star|smart_number }}
-                        </div>
-                        <div class="text-muted small">{{ product.star_details.total }} đánh giá</div>
+            <!-- Trung bình sao (trái) -->
+            <div class="col-md-auto d-flex">
+                <div class="text-center">
+                    <div class="fs-1 fw-bold">
+                        <i class="bi bi-star-fill text-warning"></i> {{ product.average_star|smart_number }}
                     </div>
-                </div>
-
-                <!-- Chi tiết sao (phải) -->
-                <div class="col">
-                    {% for star in product.star_details.stars %}
-                        <div class="d-flex align-items-center mb-1">
-                            <span class="me-2">{{ star.star }} <i class="bi bi-star-fill text-warning"></i></span>
-                            <div class="progress flex-grow-1 me-2" style="height: 8px; max-width: 200px;">
-                                <div class="progress-bar bg-primary" style="width: {{ star.percent|smart_number }}%;"></div>
-                            </div>
-                            <small style="width: 30px">{{ star.percent|smart_number }}%</small>
-                        </div>
-                    {% endfor %}
+                    <div class="text-muted small">{{ product.star_details.total }} đánh giá</div>
                 </div>
             </div>
-        {% endif %}
 
-        {% if product.reviews.all %}
-            <div class="mt-2">
-                {% for review in reviews %}
-                    <div class="py-3 border-bottom">
-                        <div class="d-flex justify-content-between mb-1">
-                            <div class="d-flex align-items-center gap-2">
-                                <strong>{{ review.name }}</strong>
-                                <!--<span class="text-success small"><i class="bi bi-patch-check-fill"></i> Đã mua</span>-->
-                            </div>
+            <!-- Chi tiết sao (phải) -->
+            <div class="col">
+                {% for star in product.star_details.stars %}
+                    <div class="d-flex align-items-center mb-1">
+                        <span class="me-2">{{ star.star }} <i class="bi bi-star-fill text-warning"></i></span>
+                        <div class="progress flex-grow-1 me-2" style="height: 8px; max-width: 200px;">
+                            <div class="progress-bar bg-primary" style="width: {{ star.percent|smart_number }}%;"></div>
                         </div>
-                        <div class="mb-2">
-                            {% with review.star.star as star_value %}
-                                {% range_tag star_value as filled_stars %}
-                                {% range_tag star_value 5 as empty_stars %}
-
-                                {% for _ in filled_stars %}
-                                    <i class="bi bi-star-fill text-warning"></i>
-                                {% endfor %}
-                                {% for _ in empty_stars %}
-                                    <i class="bi bi-star text-muted"></i>
-                                {% endfor %}
-                            {% endwith %}
-
-                        </div>
-                        <p class="mb-0">{{ review.comment }}</p>
-                        <div class="d-flex align-items-center gap-3 mt-2">
-                            <span class="small text-muted"><i class="bi bi-hand-thumbs-up"></i> Hữu ích</span>
-                            <!--<small class="text-muted">Đã dùng khoảng 1 tuần</small>-->
-                        </div>
+                        <small style="width: 30px">{{ star.percent|smart_number }}%</small>
                     </div>
                 {% endfor %}
             </div>
+        </div>
+    {% endif %}
+
+    {% if product.reviews.all %}
+        <div class="mt-2">
+            {% for review in reviews %}
+                <div class="py-3 border-bottom">
+                    <div class="d-flex justify-content-between mb-1">
+                        <div class="d-flex align-items-center gap-2">
+                            <strong>{{ review.name }}</strong>
+                            <!--<span class="text-success small"><i class="bi bi-patch-check-fill"></i> Đã mua</span>-->
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        {% with review.star.star as star_value %}
+                            {% range_tag star_value as filled_stars %}
+                            {% range_tag star_value 5 as empty_stars %}
+
+                            {% for _ in filled_stars %}
+                                <i class="bi bi-star-fill text-warning"></i>
+                            {% endfor %}
+                            {% for _ in empty_stars %}
+                                <i class="bi bi-star text-muted"></i>
+                            {% endfor %}
+                        {% endwith %}
+
+                    </div>
+                    <p class="mb-0">{{ review.comment }}</p>
+                    <div class="d-flex align-items-center gap-3 mt-2">
+                        <span class="small text-muted"><i class="bi bi-hand-thumbs-up"></i> Hữu ích</span>
+                        <!--<small class="text-muted">Đã dùng khoảng 1 tuần</small>-->
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="mt-3 d-flex gap-2">
+        {% if product.star_details.total > 0 %}
+            <a href="#review-section" class="btn btn-outline-secondary">
+                <i class="bi bi-chat-left-text"></i> Xem đánh giá
+            </a>
         {% endif %}
 
-        <div class="mt-3 d-flex gap-2">
-            {% if product.star_details.total > 0 %}
-                <a href="#review-section" class="btn btn-outline-secondary">
-                    <i class="bi bi-chat-left-text"></i> Xem đánh giá
-                </a>
-            {% endif %}
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
+            <i class="bi bi-star"></i> Viết đánh giá
+        </button>
+    </div>
+</section>
 
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
-                <i class="bi bi-star"></i> Viết đánh giá
-            </button>
-        </div>
-    </section>
-
-    {% if related_products %}
-    <section class="bg-white shadow-sm p-4 mt-4">
-        <h2 class="fw-bold mb-4">Sản phẩm liên quan</h2>
-        {% include "store/partials/product_list.html" with products=related_products layout="horizontal" %}
-    </section>
-    {% endif %}
+{% if related_products %}
+<section class="bg-white shadow-sm mt-4">
+    <h2 class="fw-bold mb-4">Sản phẩm liên quan</h2>
+    {% include "store/partials/product_list.html" with products=related_products layout="horizontal" %}
+</section>
+{% endif %}
 
 
 <!-- Modal đánh giá -->
