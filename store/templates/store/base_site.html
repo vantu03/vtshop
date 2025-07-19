@@ -105,41 +105,20 @@
         <div class="container text-center">
             <p class="mb-0 text-muted small">{{ SITE_DESCRIPTION }}</p>
         </div>
-    </div>--><header class="sticky-top">
-    <nav class="navbar navbar-light bg-white shadow-sm">
-        <div class="container d-flex align-items-center justify-content-between">
+    </div>-->
+    <header class="sticky-top">
 
-            <!-- Logo -->
-            <a class="navbar-brand d-flex align-items-center" href="/">
-                <img src="{% static 'logo.png' %}" alt="Logo" height="40" class="me-2">
-                <span class="fw-bold text-primary d-none d-sm-inline">{{ BRAND_NAME }}</span>
-            </a>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+            <div class="container d-flex align-items-center justify-content-between flex-wrap">
+                <div class="d-flex flex-nowrap">
+                    <!-- Logo -->
+                    <a class="navbar-brand" href="/">
+                        <img src="{% static 'logo.png' %}" alt="Logo" height="40">
+                    </a>
 
-            <!-- Tìm kiếm (ẩn ở màn nhỏ để không chật) -->
-            <form action="{% url 'search' %}" method="get" class="d-none d-md-flex flex-fill mx-3">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="keyword" placeholder="Tìm kiếm sản phẩm...">
-                    <button class="btn btn-outline-secondary" type="submit">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </div>
-            </form>
-
-            <!-- Nút mở offcanvas -->
-            <button class="navbar-toggler ms-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Menu offcanvas -->
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title"><i class="bi bi-list me-2"></i> Menu</h5>
-                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
-                </div>
-                <div class="offcanvas-body d-flex flex-column">
-
-                    <!-- Tìm kiếm trong offcanvas (mobile) -->
-                    <form action="{% url 'search' %}" method="get" class="d-flex d-md-none mb-3">
+                    <!-- Tìm kiếm: Luôn hiện, không trong collapse -->
+                    <form action="{% url 'search' %}" method="get" class="flex-fill mx-3 my-2 my-lg-0">
                         <div class="input-group">
                             <input type="text" class="form-control" name="keyword" placeholder="Tìm kiếm sản phẩm...">
                             <button class="btn btn-outline-secondary" type="submit">
@@ -147,26 +126,32 @@
                             </button>
                         </div>
                     </form>
+                </div>
 
-                    <!-- Menu -->
-                    <ul class="navbar-nav">
+                <!-- Toggler -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Menu trong collapse -->
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'home' %}">
-                                <i class="bi bi-house-door me-1"></i> Trang chủ
-                            </a>
+                            <a class="nav-link" href="{% url 'home' %}"><i class="bi bi-house-door"></i> Trang chủ</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'cart' %}">
-                                <i class="bi bi-cart me-1"></i> Giỏ hàng
+                                <i class="bi bi-cart"></i> Giỏ hàng
                             </a>
-                        </li
+                        </li>
                     </ul>
                 </div>
-            </div>
 
-        </div>
-    </nav>
-</header>
+            </div>
+        </nav>
+
+
+    </header>
 
     <!-- DANH MỤC NGANG -->
     <div class="py-2 border-top border-bottom bg-white">
