@@ -2,18 +2,3 @@
     background: linear-gradient(90deg, #38ef7d 0%, #11998e 100%);
     color: white; /* nếu chữ cần trắng cho dễ đọc */
 }
-#mainHeader {
-    transition: transform 0.3s ease-in-out;
-    will-change: transform;
-    z-index: 1030; /* giống Bootstrap navbar */
-}
-
-.header-hidden {
-    transform: translateY(-100%);
-}
-
-.fixed-top {
-    position: fixed;
-    top: 0;
-    width: 100%;
-}
