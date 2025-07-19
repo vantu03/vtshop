@@ -17,61 +17,64 @@
     </ol>
 </nav>
 
-<h1 class="fw-bold mb-4">
-    {% if category %}
-        {{ category.name }}
-    {% else %}
-        Danh sách sản phẩm
-    {% endif %}
-</h1>
-
-{% if all_brands %}
-<div class="mb-4 d-flex gap-2 flex-wrap">
-    {% for b in all_brands %}
-        {% if request.GET.brand == b.id|stringformat:"s" %}
-            <a href="{% build_query brand=None %}" class="border border-primary rounded px-2 py-1 d-flex align-items-center gap-2 text-decoration-none">
-                {% if b.logo %}
-                    <img src="{{ b.logo.image.url }}" alt="{{ b.name }}" height="20" class="rounded">
-                {% else %}
-                    {{ b.name }}
-                {% endif %}
-            </a>
+<section class="bg-white shadow-sm p-4">
+    <h1 class="fw-bold mb-4">
+        {% if category %}
+            {{ category.name }}
         {% else %}
-            <a href="{% build_query brand=b.id %}" class="border rounded px-2 py-1 d-flex align-items-center gap-2 text-decoration-none">
-                {% if b.logo %}
-                    <img src="{{ b.logo.image.url }}" alt="{{ b.name }}" height="20" class="rounded">
-                {% else %}
-                    {{ b.name }}
-                {% endif %}
-            </a>
+            Danh sách sản phẩm
         {% endif %}
-    {% endfor %}
-</div>
-{% endif %}
+    </h1>
 
-<div class="mb-4 d-flex gap-2 flex-wrap align-items-center">
-    <i class="bi bi-filter"></i>
-    <a href="{% build_query sort='outstanding' %}"
-       class="rounded px-2 py-1 text-decoration-none {% if not request.GET.sort or request.GET.sort == 'outstanding' %}border border-primary{% else %}border bg-white text-dark{% endif %}">
-        <i class="bi bi-stars"></i> Nổi bật
-    </a>
-    <a href="{% build_query sort='new' %}"
-       class="rounded px-2 py-1 text-decoration-none {% if request.GET.sort == 'new' %}border border-primary{% else %}border bg-white text-dark{% endif %}">
-        <i class="bi bi-clock-history"></i> Mới nhất
-    </a>
-    <a href="{% build_query sort='price_asc' %}"
-       class="rounded px-2 py-1 text-decoration-none {% if request.GET.sort == 'price_asc' %}border border-primary{% else %}border bg-white text-dark{% endif %}">
-        <i class="bi bi-sort-down"></i> Giá thấp
-    </a>
-    <a href="{% build_query sort='price_desc' %}"
-       class="rounded px-2 py-1 text-decoration-none {% if request.GET.sort == 'price_desc' %}border border-primary{% else %}border bg-white text-dark{% endif %}">
-        <i class="bi bi-sort-up"></i> Giá cao
-    </a>
-    <a href="{% build_query sort='best_seller' %}"
-       class="rounded px-2 py-1 text-decoration-none {% if request.GET.sort == 'best_seller' %}border border-primary{% else %}border bg-white text-dark{% endif %}">
-        <i class="bi bi-fire"></i> Bán chạy
-    </a>
-</div>
+    {% if all_brands %}
+    <div class="mb-4 d-flex gap-2 flex-wrap">
+        {% for b in all_brands %}
+            {% if request.GET.brand == b.id|stringformat:"s" %}
+                <a href="{% build_query brand=None %}" class="border border-primary rounded px-2 py-1 d-flex align-items-center gap-2 text-decoration-none">
+                    {% if b.logo %}
+                        <img src="{{ b.logo.image.url }}" alt="{{ b.name }}" height="20" class="rounded">
+                    {% else %}
+                        {{ b.name }}
+                    {% endif %}
+                </a>
+            {% else %}
+                <a href="{% build_query brand=b.id %}" class="border rounded px-2 py-1 d-flex align-items-center gap-2 text-decoration-none">
+                    {% if b.logo %}
+                        <img src="{{ b.logo.image.url }}" alt="{{ b.name }}" height="20" class="rounded">
+                    {% else %}
+                        {{ b.name }}
+                    {% endif %}
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
 
-{% include "store/partials/product_list.html" with products=products layout="gird" %}
+    <div class="mb-4 d-flex gap-2 flex-wrap align-items-center">
+        <i class="bi bi-filter"></i>
+        <a href="{% build_query sort='outstanding' %}"
+           class="rounded px-2 py-1 text-decoration-none {% if not request.GET.sort or request.GET.sort == 'outstanding' %}border border-primary{% else %}border bg-white text-dark{% endif %}">
+            <i class="bi bi-stars"></i> Nổi bật
+        </a>
+        <a href="{% build_query sort='new' %}"
+           class="rounded px-2 py-1 text-decoration-none {% if request.GET.sort == 'new' %}border border-primary{% else %}border bg-white text-dark{% endif %}">
+            <i class="bi bi-clock-history"></i> Mới nhất
+        </a>
+        <a href="{% build_query sort='price_asc' %}"
+           class="rounded px-2 py-1 text-decoration-none {% if request.GET.sort == 'price_asc' %}border border-primary{% else %}border bg-white text-dark{% endif %}">
+            <i class="bi bi-sort-down"></i> Giá thấp
+        </a>
+        <a href="{% build_query sort='price_desc' %}"
+           class="rounded px-2 py-1 text-decoration-none {% if request.GET.sort == 'price_desc' %}border border-primary{% else %}border bg-white text-dark{% endif %}">
+            <i class="bi bi-sort-up"></i> Giá cao
+        </a>
+        <a href="{% build_query sort='best_seller' %}"
+           class="rounded px-2 py-1 text-decoration-none {% if request.GET.sort == 'best_seller' %}border border-primary{% else %}border bg-white text-dark{% endif %}">
+            <i class="bi bi-fire"></i> Bán chạy
+        </a>
+    </div>
+
+    {% include "store/partials/product_list.html" with products=products layout="gird" %}
+
+</section>
 {% endblock %}
