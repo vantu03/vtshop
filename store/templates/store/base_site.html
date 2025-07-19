@@ -127,9 +127,13 @@
 
                 <!-- Giỏ hàng -->
                 <div class="my-2 my-lg-0">
-                    <a href="{% url 'cart' %}" class="btn">
+                    <a href="{% url 'cart' %}" class="btn position-relative">
                         <i class="bi bi-cart fs-5"></i><span class="d-none d-md-inline"> Giỏ hàng</span>
+                        <span id="cartItemCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
+                            0
+                        </span>
                     </a>
+
                 </div>
             </div>
         </nav>
