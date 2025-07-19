@@ -1,3 +1,4 @@
-.bg-mint-light {
-    background-color: #e0f7f4 !important;
+.bg-gradient-jade {
+    background: linear-gradient(90deg, #38ef7d 0%, #11998e 100%);
+    color: white; /* nếu chữ cần trắng cho dễ đọc */
 }
