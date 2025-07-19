@@ -5,7 +5,8 @@
         fill="#000"
         font-style="italic"
         font-weight="bold"
-        text-anchor="middle">
-    Phụ Kiện
+        text-anchor="middle"
+        letter-spacing="-2">
+    Phụkiện
   </text>
 </svg>
