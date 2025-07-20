@@ -1,9 +1,8 @@
-# fields.py
 from django.db import models
-from .widgets import DynamicMediaGridWidget
+from .widgets import GridSelectModalWidget
 
-class MediaGridManyToManyField(models.ManyToManyField):
+class GridSelectManyToManyField(models.ManyToManyField):
     def formfield(self, **kwargs):
-        defaults = {'widget': DynamicMediaGridWidget}
+        defaults = {'widget': GridSelectModalWidget}
         defaults.update(kwargs)
         return super().formfield(**defaults)
