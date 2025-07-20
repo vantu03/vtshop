@@ -112,7 +112,7 @@ class GridSelectManyToManyField(models.ManyToManyField):
             '''
 
             grid_items = []
-            for obj in self.choices.queryset:
+            for obj in self.choices.queryset.order_by('-id'):
                 obj_id = obj.pk
                 selected = str(obj_id) in value
 
