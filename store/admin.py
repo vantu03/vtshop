@@ -38,6 +38,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ('is_active', 'category', 'created_at')
     search_fields = ('name', 'description')
     prepopulated_fields = {'slug': ('name',)}
+    filter_horizontal = ('images',)
 
     inlines = [ProductVariantInline, ProductContentInline]
 
