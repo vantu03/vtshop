@@ -17,75 +17,128 @@ class GridSelectManyToManyField(models.ManyToManyField):
     class GridSelectModalWidget(forms.CheckboxSelectMultiple):
         class Media:
             css = {
-                'all': [
-                    'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
-                    'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css'
-                ]
+                'all': []
             }
-            js = [
-                'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js'
-            ]
+            js = []
 
         def render(self, name, value, attrs=None, renderer=None):
             value = set(map(str, value or []))
             modal_id = f"gridSelectModal_{name}"
 
-            trigger = format_html(
-                '''
-                <button type="button" class="btn btn-outline-primary mb-2" data-bs-toggle="modal" data-bs-target="#{}">
-                    <i class="bi bi-list-check me-1"></i> Select
-                </button>
-                ''',
-                modal_id
-            )
-
-            modal_header = format_html(
-                '''
-                <div class="modal fade" id="{}" tabindex="-1" aria-labelledby="{}Label" aria-hidden="true">
-                  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="{}Label"><i class="bi bi-list-check me-1"></i>Select</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                ''',
-                modal_id, modal_id, modal_id
-            )
-
-            modal_footer = '''
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            # Inline CSS
+            style = f'''
+            <style>
+                .grid-modal {{
+                    display: none;
+                    position: fixed;
+                    z-index: 1000;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: auto;
+                    background-color: rgba(0, 0, 0, 0.4);
+                }}
+                .grid-modal-content {{
+                    background-color: #fff;
+                    margin: 5% auto;
+                    padding: 20px;
+                    border: 1px solid #888;
+                    width: 90%;
+                    max-width: 1000px;
+                    border-radius: 10px;
+                }}
+                .grid-header {{
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    border-bottom: 1px solid #ddd;
+                    margin-bottom: 10px;
+                }}
+                .grid-body {{
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                    gap: 16px;
+                    max-height: 60vh;
+                    overflow-y: auto;
+                }}
+                .grid-item {{
+                    border: 1px solid #ddd;
+                    border-radius: 8px;
+                    padding: 10px;
+                    background: #f9f9f9;
+                }}
+                .grid-item input[type="checkbox"] {{
+                    margin-right: 8px;
+                }}
+                .grid-footer {{
+                    margin-top: 10px;
+                    text-align: right;
+                }}
+                .btn {{
+                    padding: 6px 12px;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }}
+                .btn-primary {{
+                    background-color: #007bff;
+                    color: white;
+                }}
+                .btn-secondary {{
+                    background-color: #6c757d;
+                    color: white;
+                }}
+            </style>
             '''
 
-            grid_items = []
+            # Inline JS
+            script = f'''
+            <script>
+                function openModal_{modal_id}() {{
+                    document.getElementById("{modal_id}").style.display = "block";
+                }}
+                function closeModal_{modal_id}() {{
+                    document.getElementById("{modal_id}").style.display = "none";
+                }}
+                window.addEventListener('click', function(event) {{
+                    var modal = document.getElementById("{modal_id}");
+                    if (event.target === modal) {{
+                        modal.style.display = "none";
+                    }}
+                }});
+            </script>
+            '''
 
+            # Trigger Button
+            trigger = format_html(
+                f'''
+                <button type="button" class="btn btn-primary mb-2" onclick="openModal_{modal_id}()">
+                    Chọn mục
+                </button>
+                '''
+            )
+
+            # Grid Items
+            grid_items = []
             for obj in self.choices.queryset:
                 obj_id = obj.pk
                 selected = str(obj_id) in value
-                content_lines = []
 
+                content_lines = []
                 for field in obj._meta.fields:
                     field_name = field.name
                     verbose = field.verbose_name.capitalize()
-
                     val = getattr(obj, field_name)
                     val_display = str(val)
-
                     content_lines.append(f"<strong>{verbose}:</strong> {val_display}")
 
                 content = "<br>".join(content_lines)
 
-
                 item_html = format_html(
                     '''
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <label class="grid-option d-block border rounded p-2 bg-light text-start h-100">
+                    <div class="grid-item">
+                        <label>
                             <input type="checkbox" name="{name}" value="{value}" class="form-check-input" {checked}>
                             {content}
                         </label>
@@ -94,9 +147,28 @@ class GridSelectManyToManyField(models.ManyToManyField):
                     name=name,
                     value=obj_id,
                     checked='checked' if selected else '',
-                    content=content,
+                    content=mark_safe(content),
                 )
                 grid_items.append(item_html)
 
-            grid_html = '<div class="row g-3 grid-select">' + '\n'.join(grid_items) + '</div>'
-            return mark_safe(trigger + modal_header + grid_html + modal_footer)
+            # Modal structure
+            modal = format_html(
+                f'''
+                <div id="{modal_id}" class="grid-modal">
+                  <div class="grid-modal-content">
+                    <div class="grid-header">
+                        <h5>Chọn mục</h5>
+                        <button type="button" class="btn btn-secondary" onclick="closeModal_{modal_id}()">×</button>
+                    </div>
+                    <div class="grid-body">
+                        {''.join(grid_items)}
+                    </div>
+                    <div class="grid-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal_{modal_id}()">OK</button>
+                    </div>
+                  </div>
+                </div>
+                '''
+            )
+
+            return mark_safe(style + script + trigger + modal)
