@@ -78,7 +78,6 @@ class Product(models.Model):
         Image,
         related_name='images',
         blank=True,
-        display_fields=['image', 'alt_text',],
         display_renderer='image_preview',
     )
     is_active = models.BooleanField(default=True)
@@ -135,7 +134,12 @@ class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='variants')
     name = models.CharField(max_length=500)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    images = models.ManyToManyField(Image, related_name='products', blank=True)
+    images = GridSelectManyToManyField(
+        Image,
+        related_name='products',
+        blank=True,
+        display_renderer='image_preview',
+    )
 
     def __str__(self):
         return f"{self.name} - {self.product.name}"
