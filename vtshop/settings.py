@@ -41,7 +41,6 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 
 # ========== Ứng dụng ==========
 INSTALLED_APPS = [
-    'filebrowser',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,6 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'ckeditor',
     'ckeditor_uploader',
+    'grappelli',
+    'filebrowser',
 ]
 
 # ========== Middleware ==========

@@ -4,9 +4,10 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count
 from ckeditor_uploader.fields import RichTextUploadingField
+from filebrowser.fields import FileBrowseField
 
 class Image(models.Model):
-    image = models.ImageField(upload_to='images/')
+    image = FileBrowseField("Image", max_length=200, directory="images/", extensions=[".jpg", ".png", ".gif"])
     alt_text = models.CharField(max_length=255, blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 

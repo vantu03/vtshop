@@ -8,7 +8,6 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name',)
 
-
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
     list_display = ('image_preview', '__str__', 'uploaded_at',)
