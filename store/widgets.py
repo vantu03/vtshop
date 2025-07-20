@@ -77,6 +77,8 @@ class GridSelectManyToManyField(models.ManyToManyField):
 
             grid_items = []
             for obj in self.choices.queryset:
+                obj_id = obj.pk
+                selected = str(obj_id) in value
                 html_parts = []
 
                 # Render preview nếu có
