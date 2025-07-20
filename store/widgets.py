@@ -1,4 +1,3 @@
-# widgets.py
 from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
@@ -17,11 +16,46 @@ class DynamicMediaGridWidget(forms.CheckboxSelectMultiple):
 
     def render(self, name, value, attrs=None, renderer=None):
         value = set(map(str, value or []))
+        modal_id = f"mediaModal_{name}"
 
-        output = [
-            '<div class="border rounded p-3 bg-white" style="max-height: 400px; overflow-y: auto;">',
-            '<div class="row g-3">'
-        ]
+        # Button trigger
+        trigger = format_html(
+            '''
+            <button type="button" class="btn btn-outline-primary mb-2" data-bs-toggle="modal" data-bs-target="#{}">
+                <i class="bi bi-images me-1"></i> Chọn media
+            </button>
+            ''',
+            modal_id
+        )
+
+        # Start Modal
+        modal_header = format_html(
+            '''
+            <div class="modal fade" id="{}" tabindex="-1" aria-labelledby="{}Label" aria-hidden="true">
+              <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="{}Label"><i class="bi bi-images me-1"></i>Chọn media</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+            ''',
+            modal_id, modal_id, modal_id
+        )
+
+        modal_footer = '''
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+        '''
+
+        # Media grid
+        grid_start = '<div class="row g-3">'
+        grid_items = []
 
         for option in self.choices:
             obj = option[1]
@@ -49,10 +83,18 @@ class DynamicMediaGridWidget(forms.CheckboxSelectMultiple):
                 label,
                 '<i class="bi bi-check-circle-fill text-primary position-absolute top-0 end-0 m-2" style="font-size: 1.2rem;"></i>' if selected else ''
             )
-            output.append(item_html)
+            grid_items.append(item_html)
 
-        output.append('</div></div>')
-        return mark_safe('\n'.join(output))
+        grid_html = grid_start + '\n'.join(grid_items) + '</div>'
+
+        full_html = (
+            trigger +
+            modal_header +
+            grid_html +
+            modal_footer
+        )
+
+        return mark_safe(full_html)
 
     def render_media(self, obj):
         if hasattr(obj, 'image') and obj.image:
