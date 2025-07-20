@@ -44,7 +44,7 @@ class GridSelectModalWidget(forms.CheckboxSelectMultiple):
         modal_footer = '''
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
                   </div>
                 </div>
               </div>
@@ -69,7 +69,7 @@ class GridSelectModalWidget(forms.CheckboxSelectMultiple):
                 name=name,
                 value=obj_id,
                 checked='checked' if selected else '',
-                content='Chưa có',
+                content=obj,
             )
             grid_items.append(item_html)
 
