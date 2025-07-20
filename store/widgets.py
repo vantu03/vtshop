@@ -80,24 +80,18 @@ class GridSelectManyToManyField(models.ManyToManyField):
                 obj_id = obj.pk
                 selected = str(obj_id) in value
 
-                # Dùng render tùy biến nếu có
                 if self.display_renderer and hasattr(obj, self.display_renderer):
                     render_func = getattr(obj, self.display_renderer)
                     content = render_func() if callable(render_func) else str(render_func)
-                    image_html = ''
                 else:
+
                     fields = self.display_fields or [f.name for f in obj._meta.fields]
                     content_lines = []
-                    image_html = ''
-
+                    
                     for field_name in fields:
                         field = obj._meta.get_field(field_name)
                         val = getattr(obj, field_name)
                         val_display = str(val)
-
-                        if isinstance(field, models.ImageField) and val:
-                            image_html = f'<img src="{val.url}" class="card-img-top" style="max-height:160px; object-fit:contain;">'
-                            val_display = val.name
 
                         content_lines.append(
                             f'''
@@ -119,7 +113,6 @@ class GridSelectManyToManyField(models.ManyToManyField):
                                 <input type="checkbox" id="{checkbox_id}" name="{name}" value="{value}" class="form-check-input" {checked}>
                                 <span class="text-muted small">ID: {value}</span>
                             </div>
-                            {image_html}
                             <div class="card-body p-2">
                                 {content}
                             </div>
@@ -130,7 +123,6 @@ class GridSelectManyToManyField(models.ManyToManyField):
                     name=name,
                     value=obj_id,
                     checked='checked' if selected else '',
-                    image_html=mark_safe(image_html),
                     content=mark_safe(content),
                 )
 
