@@ -2,7 +2,6 @@ from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
 
-
 class GridSelectModalWidget(forms.CheckboxSelectMultiple):
     class Media:
         css = {
@@ -63,11 +62,6 @@ class GridSelectModalWidget(forms.CheckboxSelectMultiple):
             obj_id = option[0]
             selected = str(obj_id) in value
 
-            preview = format_html(
-                '<div class="d-flex align-items-center justify-content-center bg-secondary text-white rounded" style="height: 120px;">'
-                '<i class="bi bi-box" style="font-size: 2rem;"></i>'
-                '</div>'
-            )
             label = str(obj)
 
             item_html = format_html(
@@ -84,7 +78,6 @@ class GridSelectModalWidget(forms.CheckboxSelectMultiple):
                 name,
                 obj_id,
                 'checked' if selected else '',
-                preview,
                 label,
                 '<i class="bi bi-check-circle-fill text-primary position-absolute top-0 end-0 m-2" style="font-size: 1.2rem;"></i>' if selected else ''
             )
