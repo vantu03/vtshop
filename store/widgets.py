@@ -78,6 +78,7 @@ class GridSelectModalWidget(forms.CheckboxSelectMultiple):
                 name,
                 obj_id,
                 'checked' if selected else '',
+                '',
                 label,
                 '<i class="bi bi-check-circle-fill text-primary position-absolute top-0 end-0 m-2" style="font-size: 1.2rem;"></i>' if selected else ''
             )
