@@ -108,15 +108,17 @@ class GridSelectManyToManyField(models.ManyToManyField):
                 item_html = format_html(
                     '''
                     <div class="col-6 col-md-4 col-lg-3">
-                        <label class="card h-100 shadow-sm" for="{checkbox_id}">
-                            <div class="card-header d-flex justify-content-start align-items-center gap-2 py-1">
-                                <input type="checkbox" id="{checkbox_id}" name="{name}" value="{value}" class="form-check-input" {checked}>
-                                <span class="text-muted small">ID: {value}</span>
-                            </div>
-                            <div class="card-body p-2">
-                                {content}
-                            </div>
-                        </label>
+                        <div class="card h-100 shadow-sm">
+                            <label for="{checkbox_id}">
+                                <div class="card-header d-flex justify-content-start align-items-center gap-2 py-1">
+                                    <input type="checkbox" id="{checkbox_id}" name="{name}" value="{value}" class="form-check-input" {checked}>
+                                    <span class="text-muted small">ID: {value}</span>
+                                </div>
+                                <div class="card-body p-2">
+                                    {content}
+                                </div>
+                            </label>
+                        </div>
                     </div>
                     ''',
                     checkbox_id=checkbox_id,
