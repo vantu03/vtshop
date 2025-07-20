@@ -109,7 +109,7 @@ class GridSelectManyToManyField(models.ManyToManyField):
                     '''
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="card h-100 shadow-sm">
-                            <label for="{checkbox_id}">
+                            <label for="{checkbox_id}" class="w-100 h-100">
                                 <div class="card-header d-flex justify-content-start align-items-center gap-2 py-1">
                                     <input type="checkbox" id="{checkbox_id}" name="{name}" value="{value}" class="form-check-input" {checked}>
                                     <span class="text-muted small">ID: {value}</span>
