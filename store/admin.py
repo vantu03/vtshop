@@ -13,6 +13,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class ImageAdmin(admin.ModelAdmin):
     list_display = ('image_preview', '__str__', 'uploaded_at',)
     search_fields = ('alt_text',)
+    readonly_fields = ('image_preview',)
 
     def image_preview(self, obj):
         if obj.image:  # thay 'image' bằng đúng tên field trong model
