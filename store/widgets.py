@@ -82,14 +82,18 @@ class GridSelectManyToManyField(models.ManyToManyField):
                 html_parts = []
                 # Render các field
                 for field_name in self.display_fields or [f.name for f in obj._meta.fields]:
-                    if (
-                            self.display_renderer == field_name
-                            and hasattr(obj, field_name)
-                    ):
-                        render_func = getattr(obj, field_name)
-                        html_parts.append(render_func() if callable(render_func) else str(render_func))
+                    val = getattr(obj, field_name, "")
+
+                    if isinstance(self.display_renderer, dict) and field_name in self.display_renderer:
+                        renderer = self.display_renderer[field_name]
+
+                        if callable(renderer):
+                            html_parts.append(renderer(val, obj))
+                        elif isinstance(renderer, str):
+                            html_parts.append(renderer.format(val))
+                        else:
+                            html_parts.append(str(val))
                     else:
-                        val = getattr(obj, field_name, "")
                         html_parts.append(
                             f'''
                             <div class="text-truncate small" title="{val}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">

@@ -14,9 +14,6 @@ class Image(models.Model):
 
     def __str__(self):
         return self.alt_text or self.image.name
-    
-    def image_preview(self):
-        return format_html('<img src="{}" style="max-height:100px;">', self.image.url)
 
 class Category(models.Model):
     icon = models.ForeignKey(
@@ -74,7 +71,10 @@ class Product(models.Model):
         related_name='images',
         blank=True,
         display_fields=['image', 'alt_text',],
-        display_renderer='image_preview',
+        display_renderer={
+            'image': '<img src="{}" style="max-height:100px;">',
+            'alt_text': lambda val, obj: f'<b>{val}</b> - uploaded at {obj.uploaded_at}',
+        }
     )
     is_active = models.BooleanField(default=True)
     view_count = models.PositiveIntegerField(default=0)
