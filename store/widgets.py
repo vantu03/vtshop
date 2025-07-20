@@ -1,88 +1,102 @@
 from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
+from django.db import models
 
-class GridSelectModalWidget(forms.CheckboxSelectMultiple):
-    class Media:
-        css = {
-            'all': [
-                'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
-                'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css'
-            ]
+class GridSelectManyToManyField(models.ManyToManyField):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def formfield(self, **kwargs):
+        defaults = {
+            'widget': GridSelectManyToManyField.GridSelectModalWidget()
         }
-        js = [
-            'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js'
-        ]
+        defaults.update(kwargs)
+        return super().formfield(**defaults)
 
-    def render(self, name, value, attrs=None, renderer=None):
-        value = set(map(str, value or []))
-        modal_id = f"gridSelectModal_{name}"
+    class GridSelectModalWidget(forms.CheckboxSelectMultiple):
+        class Media:
+            css = {
+                'all': [
+                    'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
+                    'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css'
+                ]
+            }
+            js = [
+                'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js'
+            ]
 
-        trigger = format_html(
-            '''
-            <button type="button" class="btn btn-outline-primary mb-2" data-bs-toggle="modal" data-bs-target="#{}">
-                <i class="bi bi-list-check me-1"></i> Select
-            </button>
-            ''',
-            modal_id
-        )
+        def render(self, name, value, attrs=None, renderer=None):
+            value = set(map(str, value or []))
+            modal_id = f"gridSelectModal_{name}"
 
-        modal_header = format_html(
-            '''
-            <div class="modal fade" id="{}" tabindex="-1" aria-labelledby="{}Label" aria-hidden="true">
-              <div class="modal-dialog modal-xl modal-dialog-scrollable">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="{}Label"><i class="bi bi-list-check me-1"></i>Select</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-            ''',
-            modal_id, modal_id, modal_id
-        )
-
-        modal_footer = '''
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-        '''
-
-        for value, label in self.choices:
-            print(f"{label}: {value}")
-            
-        grid_items = []
-        for option in self.choices:
-            obj_id = option[0]
-            selected = str(obj_id) in value
-
-            row_values = option[1:]  # các trường dữ liệu
-
-            # Ghép nhãn và giá trị
-            content_lines = []
-            for val in row_values:
-                content_lines.append(f"{val}")
-            content = "<br>".join(content_lines)
-
-
-            item_html = format_html(
+            trigger = format_html(
                 '''
-                <div class="col-6 col-md-4 col-lg-3">
-                    <label class="grid-option d-block border rounded p-2 bg-light text-start h-100">
-                        <input type="checkbox" name="{name}" value="{value}" class="form-check-input" {checked}>
-                        {content}
-                    </label>
-                </div>
+                <button type="button" class="btn btn-outline-primary mb-2" data-bs-toggle="modal" data-bs-target="#{}">
+                    <i class="bi bi-list-check me-1"></i> Select
+                </button>
                 ''',
-                name=name,
-                value=obj_id,
-                checked='checked' if selected else '',
-                content=content,
+                modal_id
             )
-            grid_items.append(item_html)
 
-        grid_html = '<div class="row g-3 grid-select">' + '\n'.join(grid_items) + '</div>'
-        return mark_safe(trigger + modal_header + grid_html + modal_footer)
+            modal_header = format_html(
+                '''
+                <div class="modal fade" id="{}" tabindex="-1" aria-labelledby="{}Label" aria-hidden="true">
+                  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="{}Label"><i class="bi bi-list-check me-1"></i>Select</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                ''',
+                modal_id, modal_id, modal_id
+            )
+
+            modal_footer = '''
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            '''
+
+            grid_items = []
+
+            for obj in self.choices.queryset:
+                obj_id = obj.pk
+                selected = str(obj_id) in value
+                content_lines = []
+
+                for field in obj._meta.fields:
+                    field_name = field.name
+                    verbose = field.verbose_name.capitalize()
+
+                    val = getattr(obj, field_name)
+                    val_display = str(val)
+
+                    content_lines.append(f"<strong>{verbose}:</strong> {val_display}")
+
+                content = "<br>".join(content_lines)
+
+
+                item_html = format_html(
+                    '''
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <label class="grid-option d-block border rounded p-2 bg-light text-start h-100">
+                            <input type="checkbox" name="{name}" value="{value}" class="form-check-input" {checked}>
+                            {content}
+                        </label>
+                    </div>
+                    ''',
+                    name=name,
+                    value=obj_id,
+                    checked='checked' if selected else '',
+                    content=content,
+                )
+                grid_items.append(item_html)
+
+            grid_html = '<div class="row g-3 grid-select">' + '\n'.join(grid_items) + '</div>'
+            return mark_safe(trigger + modal_header + grid_html + modal_footer)

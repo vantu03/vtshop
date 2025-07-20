@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count
 from ckeditor_uploader.fields import RichTextUploadingField
-from .fields import GridSelectManyToManyField
+from .widgets import GridSelectManyToManyField
 
 class Image(models.Model):
     image = models.ImageField(upload_to='images/')
