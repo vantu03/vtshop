@@ -77,29 +77,22 @@ class GridSelectManyToManyField(models.ManyToManyField):
 
             grid_items = []
             for obj in self.choices.queryset:
-                obj_id = obj.pk
-                selected = str(obj_id) in value
+                html_parts = []
 
-                fields = self.display_fields or [f.name for f in obj._meta.fields]
-                content_lines = []
-
+                # Render preview nếu có
                 if self.display_renderer and hasattr(obj, self.display_renderer):
-                    render_func = getattr(obj, self.display_renderer)
-                    content_lines.append(render_func() if callable(render_func) else str(render_func))
+                    renderer = getattr(obj, self.display_renderer)
+                    html_parts.append(renderer() if callable(renderer) else str(renderer))
 
-                for field_name in fields:
-                    field = obj._meta.get_field(field_name)
-                    val = getattr(obj, field_name)
-                    val_display = str(val)
+                # Render các field
+                for field_name in self.display_fields or [f.name for f in obj._meta.fields]:
+                    value = getattr(obj, field_name, "")
+                    if hasattr(value, 'url'):  # ImageField
+                        html_parts.append(f'<div><img src="{value.url}" style="max-height:100px;"></div>')
+                    else:
+                        html_parts.append(f'<div><strong>{field_name}:</strong> {value}</div>')
 
-                    content_lines.append(
-                        f'''
-                        <div class="text-truncate small" title="{val_display}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                            <strong>{field.verbose_name.capitalize()}:</strong> {val_display}
-                        </div>
-                        '''
-                    )
-                content = ''.join(content_lines)
+                content = ''.join(html_parts)
 
                 # Card layout
                 checkbox_id = f"id_{name}_{obj_id}"
