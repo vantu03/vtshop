@@ -4,8 +4,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count
 from ckeditor_uploader.fields import RichTextUploadingField
-from filer.fields.image import FilerImageField
-from filer.models import Image as FilerImage
+from .fields import MediaGridManyToManyField
 
 class Image(models.Model):
     image = models.ImageField(upload_to='images/')
@@ -64,7 +63,7 @@ class Product(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
-    images = models.ManyToManyField(Image, related_name='images', blank=True)
+    images = MediaGridManyToManyField(Image, related_name='images', blank=True)
     is_active = models.BooleanField(default=True)
     view_count = models.PositiveIntegerField(default=0)
     sold = models.PositiveIntegerField(default=0)
