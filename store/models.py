@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count
 from ckeditor_uploader.fields import RichTextUploadingField
+from filebrowser.fields import FileBrowseField
 
 class Image(models.Model):
     image = models.ImageField(upload_to='images/')
@@ -62,6 +63,7 @@ class Product(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
+    thumbnail2 = FileBrowseField("Thumbnail", max_length=200, directory="products/", extensions=[".jpg", ".png"], blank=True)
     images = models.ManyToManyField(Image, related_name='images', blank=True)
     is_active = models.BooleanField(default=True)
     view_count = models.PositiveIntegerField(default=0)
