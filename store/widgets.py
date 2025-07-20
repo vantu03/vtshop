@@ -85,22 +85,19 @@ class GridSelectManyToManyField(models.ManyToManyField):
                     val = getattr(obj, field_name, "")
 
                     if isinstance(self.display_renderer, dict) and field_name in self.display_renderer:
-                        renderer = self.display_renderer[field_name]
+                        method_name = self.display_renderer[field_name]
+                        if hasattr(obj, method_name):
+                            render_func = getattr(obj, method_name)
+                            html_parts.append(render_func() if callable(render_func) else str(render_func))
+                            continue
 
-                        if callable(renderer):
-                            html_parts.append(renderer(val, obj))
-                        elif isinstance(renderer, str):
-                            html_parts.append(renderer.format(val))
-                        else:
-                            html_parts.append(str(val))
-                    else:
-                        html_parts.append(
-                            f'''
-                            <div class="text-truncate small" title="{val}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                <strong>{field_name.capitalize()}:</strong> {val}
-                            </div>
-                            '''
-                        )
+                    html_parts.append(
+                        f'''
+                        <div class="text-truncate small" title="{val}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            <strong>{field_name.capitalize()}:</strong> {val}
+                        </div>
+                        '''
+                    )
 
                 content = ''.join(html_parts)
 

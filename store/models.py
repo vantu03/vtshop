@@ -15,6 +15,15 @@ class Image(models.Model):
     def __str__(self):
         return self.alt_text or self.image.name
 
+    def image_preview(self):
+        if self.image:
+            return format_html(
+                '<img src="{}" class="img-fluid rounded" style="max-height:100px;"><br><small>{}</small>',
+                self.image.url,
+                self.alt_text or self.image.name
+            )
+        return "-"
+
 class Category(models.Model):
     icon = models.ForeignKey(
         Image,
@@ -53,7 +62,6 @@ class Brand(models.Model):
 
 class Product(models.Model):
 
-
     title = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     default_price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
@@ -71,10 +79,7 @@ class Product(models.Model):
         related_name='images',
         blank=True,
         display_fields=['image', 'alt_text',],
-        display_renderer={
-            'image': '<img src="{}" style="max-height:100px;">',
-            'alt_text': lambda val, obj: f'<b>{val}</b> - uploaded at {obj.uploaded_at}',
-        }
+        display_renderer='image_preview',
     )
     is_active = models.BooleanField(default=True)
     view_count = models.PositiveIntegerField(default=0)
