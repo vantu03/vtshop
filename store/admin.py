@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Category, Image, Product, ProductVariant, ProductContent, Order, Promotion, Review, Star, OrderItem, Brand
+from django.utils.html import format_html
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -10,9 +11,15 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'uploaded_at')
+    list_display = ('__str__', 'uploaded_at', 'image_preview')
     search_fields = ('alt_text',)
 
+    def image_preview(self, obj):
+        if obj.image:  # thay 'image' bằng đúng tên field trong model
+            return format_html('<img src="{}" width="100" height="auto" style="object-fit: contain;" />', obj.image.url)
+        return "-"
+    image_preview.short_description = "Preview"
+    image_preview.allow_tags = True
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
