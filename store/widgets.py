@@ -1,108 +1,124 @@
-# fields.py
 from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
-
 
 class DynamicMediaGridWidget(forms.CheckboxSelectMultiple):
     def render(self, name, value, attrs=None, renderer=None):
         value = set(map(str, value or []))
 
-        # Nhúng CSS & JS để tạo modal đơn giản & khung cuộn
         style = '''
         <style>
         .media-grid-wrapper {
-            border: 1px solid #ddd;
+            border: 1px solid #d0d0d0;
             border-radius: 4px;
             padding: 10px;
             margin-top: 5px;
-            background: #f9f9f9;
+            background: #fff;
             max-height: 400px;
             overflow-y: auto;
         }
+
         .media-grid {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 10px;
         }
+
         .media-item {
-            cursor: pointer;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
-            transition: transform 0.2s ease;
+            border: 1px solid #eee;
+            padding: 5px;
+            border-radius: 4px;
+            transition: box-shadow 0.2s ease;
+            background: #f9f9f9;
         }
+
         .media-item:hover {
-            transform: scale(1.05);
+            box-shadow: 0 0 5px #ccc;
         }
+
         .media-item img,
         .media-item video {
-            width: 120px;
+            width: 100%;
+            height: auto;
+            max-height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .media-item input {
+            display: none;
+        }
+
+        .media-item input:checked + .media-preview {
+            outline: 3px solid #0c6dfd;
+        }
+
+        .media-preview {
+            display: block;
+            width: 100%;
             height: 120px;
             object-fit: cover;
-            border: 2px solid #ccc;
-            border-radius: 6px;
-            transition: border 0.2s ease;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
-        .media-item input:checked + img,
-        .media-item input:checked + video {
-            border: 3px solid #007bff;
+
+        .media-label {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #444;
+            word-break: break-word;
         }
         </style>
         '''
 
-        # Optional: Toggle button
-        toggle_button = f'''
-        <script>
-        function toggleMediaGrid_{name}() {{
-            var grid = document.getElementById('media-grid-wrapper-{name}');
-            if (grid.style.display === 'none') {{
-                grid.style.display = 'block';
-            }} else {{
-                grid.style.display = 'none';
-            }}
-        }}
-        </script>
-        <a href="javascript:void(0)" onclick="toggleMediaGrid_{name}()" class="button">Chọn media</a>
-        '''
-
-        output = [style, toggle_button, f'<div id="media-grid-wrapper-{name}" class="media-grid-wrapper">', '<div class="media-grid">']
+        output = [style, '<div class="media-grid-wrapper">', '<div class="media-grid">']
 
         for option in self.choices:
             obj = option[1]
             obj_id = option[0]
             selected = str(obj_id) in value
 
-            media_html = self.render_media(obj)
+            media_html = self.render_media(obj, selected)
+            label = str(obj)
 
-            checkbox_html = format_html(
+            item_html = format_html(
                 '<label class="media-item">'
-                '<input type="checkbox" name="{}" value="{}" {} style="display:none;">'
+                '<input type="checkbox" name="{}" value="{}" {}>'
                 '{}'
+                '<div class="media-label">{}</div>'
                 '</label>',
                 name,
                 obj_id,
                 'checked' if selected else '',
                 media_html,
+                label
             )
-            output.append(checkbox_html)
+            output.append(item_html)
 
         output.append('</div></div>')
         return mark_safe('\n'.join(output))
 
-    def render_media(self, obj):
+    def render_media(self, obj, selected):
+        # Ưu tiên ảnh nếu có
         if hasattr(obj, 'image') and obj.image:
             return format_html(
-                '<img src="{}" alt="{}">',
+                '<img src="{}" alt="{}" class="media-preview">',
                 obj.image.url,
                 obj.image.name
             )
         elif hasattr(obj, 'video') and obj.video:
             return format_html(
-                '<video controls><source src="{}" type="video/mp4"></video>',
+                '<video class="media-preview" controls>'
+                '<source src="{}" type="video/mp4">'
+                '</video>',
                 obj.video.url
             )
         else:
             return format_html(
-                '<div style="width:120px;height:120px;display:flex;align-items:center;justify-content:center;background:#eee;">{}</div>',
+                '<div class="media-preview" style="display:flex;align-items:center;justify-content:center;background:#eee;">{}</div>',
                 str(obj)
             )
