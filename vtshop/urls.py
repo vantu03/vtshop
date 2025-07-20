@@ -3,7 +3,6 @@ from django.urls import path, include
 from filebrowser.sites import site
 
 urlpatterns = [
-    path('grappelli/', include('grappelli.urls')),
     path('admin/filebrowser/', site.urls),
     path('admin/', admin.site.urls),
     path("ckeditor/", include("ckeditor_uploader.urls")),
