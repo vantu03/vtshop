@@ -57,8 +57,6 @@ class GridSelectModalWidget(forms.CheckboxSelectMultiple):
             obj_id = option[0]
             selected = str(obj_id) in value
 
-            content_html = self.render_fields(obj)
-
             item_html = format_html(
                 '''
                 <div class="col-6 col-md-4 col-lg-3">
@@ -72,55 +70,10 @@ class GridSelectModalWidget(forms.CheckboxSelectMultiple):
                 name=name,
                 value=obj_id,
                 checked='checked' if selected else '',
-                content=content_html,
+                content='Chưa có',
                 show_check='' if selected else 'display: none;'
             )
             grid_items.append(item_html)
 
         grid_html = '<div class="row g-3 grid-select">' + '\n'.join(grid_items) + '</div>'
         return mark_safe(trigger + modal_header + grid_html + modal_footer)
-
-    def render_fields(self, obj):
-        fields_to_show = [
-            f for f in obj._meta.fields
-            if f.name not in ['id', 'pk'] and not f.is_relation
-        ]
-
-        rows = []
-        for field in fields_to_show:
-            field_name = field.name
-            value = getattr(obj, field_name, '')
-
-            if hasattr(value, 'url'):
-                file_url = value.url
-                if str(file_url).lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')):
-                    rows.append(format_html(
-                        '<img src="{}" alt="{}" class="img-fluid rounded mb-2" style="max-height:120px;">',
-                        file_url, field_name
-                    ))
-                elif str(file_url).lower().endswith('.mp4'):
-                    rows.append(format_html(
-                        '<video controls class="w-100 rounded mb-2" style="max-height:120px;"><source src="{}" type="video/mp4"></video>',
-                        file_url
-                    ))
-                else:
-                    rows.append(format_html(
-                        '<div class="small"><strong>{}:</strong> <a href="{}" target="_blank">File</a></div>',
-                        field.verbose_name, file_url
-                    ))
-            else:
-                # Format cho boolean / ngày tháng / văn bản
-                if isinstance(value, bool):
-                    icon = 'bi-check-lg text-success' if value else 'bi-x-lg text-danger'
-                    rows.append(format_html(
-                        '<div class="small"><strong>{}:</strong> <i class="bi {}"></i></div>',
-                        field.verbose_name, icon
-                    ))
-                else:
-                    rows.append(format_html(
-                        '<div class="small text-muted"><strong>{}:</strong> {}</div>',
-                        field.verbose_name,
-                        value if value else '<span class="text-muted">—</span>'
-                    ))
-
-        return mark_safe(''.join(rows) if rows else f'<div class="text-muted">{str(obj)}</div>')
