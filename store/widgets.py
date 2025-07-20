@@ -80,42 +80,54 @@ class GridSelectManyToManyField(models.ManyToManyField):
                 obj_id = obj.pk
                 selected = str(obj_id) in value
 
-                # Nếu có display_renderer → gọi hàm hiển thị custom
+                # Dùng render tùy biến nếu có
                 if self.display_renderer and hasattr(obj, self.display_renderer):
                     render_func = getattr(obj, self.display_renderer)
-                    if callable(render_func):
-                        content = render_func()
-                    else:
-                        content = str(render_func)
+                    content = render_func() if callable(render_func) else str(render_func)
+                    image_html = ''
                 else:
-                    # Nếu có display_fields → chỉ hiển thị những field đó
                     fields = self.display_fields or [f.name for f in obj._meta.fields]
-
                     content_lines = []
+                    image_html = ''
+
                     for field_name in fields:
                         field = obj._meta.get_field(field_name)
-                        verbose = field.verbose_name.capitalize()
                         val = getattr(obj, field_name)
+                        val_display = str(val)
+
                         if isinstance(field, models.ImageField) and val:
-                            val_display = f'<img src="{val.url}" class="img-fluid mb-1 rounded" style="max-height:100px;"><br>{val.name}'
-                        else:
-                            val_display = str(val)
-                        content_lines.append(f"<strong>{verbose}:</strong> {val_display}")
+                            image_html = f'<img src="{val.url}" class="card-img-top" style="max-height:160px; object-fit:contain;">'
+                            val_display = val.name
 
-                    content = "<br>".join(content_lines)
+                        content_lines.append(
+                            f'''
+                            <div class="text-truncate small" title="{val_display}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <strong>{field.verbose_name.capitalize()}:</strong> {val_display}
+                            </div>
+                            '''
+                        )
+                    content = ''.join(content_lines)
 
+                # Card layout
                 item_html = format_html(
                     '''
                     <div class="col-6 col-md-4 col-lg-3">
-                        <label class="border rounded p-2 d-block h-100 bg-light">
-                            <input type="checkbox" name="{name}" value="{value}" class="form-check-input me-2" {checked}>
-                            {content}
-                        </label>
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-header d-flex justify-content-start align-items-center gap-2 py-1">
+                                <input type="checkbox" name="{name}" value="{value}" class="form-check-input" {checked}>
+                                <span class="text-muted small">ID: {value}</span>
+                            </div>
+                            {image_html}
+                            <div class="card-body p-2">
+                                {content}
+                            </div>
+                        </div>
                     </div>
                     ''',
                     name=name,
                     value=obj_id,
                     checked='checked' if selected else '',
+                    image_html=mark_safe(image_html),
                     content=mark_safe(content),
                 )
                 grid_items.append(item_html)
