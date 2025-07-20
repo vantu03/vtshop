@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db.models import Avg, Count
 from ckeditor_uploader.fields import RichTextUploadingField
 from .widgets import GridSelectManyToManyField
+from django.utils.html import format_html
 
 class Image(models.Model):
     image = models.ImageField(upload_to='images/')
@@ -51,6 +52,16 @@ class Brand(models.Model):
         super().save(*args, **kwargs)
 
 class Product(models.Model):
+
+    def image_preview(self):
+        if self.image:
+            return format_html(
+                '<div class="text-center"><img src="{}" class="img-fluid mb-2 rounded" style="max-height:120px;"><br><small>{}</small></div>',
+                self.image.url,
+                self.alt_text or self.image.name
+            )
+        return "-"
+
     title = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     default_price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
@@ -67,6 +78,8 @@ class Product(models.Model):
         Image,
         related_name='images',
         blank=True,
+        display_fields=['image', 'alt_text',],
+        display_renderer='image_preview',
     )
     is_active = models.BooleanField(default=True)
     view_count = models.PositiveIntegerField(default=0)

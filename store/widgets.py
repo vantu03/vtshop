@@ -4,17 +4,27 @@ from django.utils.html import format_html
 from django.db import models
 
 class GridSelectManyToManyField(models.ManyToManyField):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, display_fields=None, display_renderer=None, **kwargs):
+        self.display_fields = display_fields
+        self.display_renderer = display_renderer
         super().__init__(*args, **kwargs)
 
     def formfield(self, **kwargs):
         defaults = {
-            'widget': GridSelectManyToManyField.GridSelectModalWidget()
+            'widget': self.GridSelectModalWidget(
+                display_fields=self.display_fields,
+                display_renderer=self.display_renderer,
+            )
         }
         defaults.update(kwargs)
         return super().formfield(**defaults)
 
     class GridSelectModalWidget(forms.CheckboxSelectMultiple):
+        def __init__(self, display_fields=None, display_renderer=None, attrs=None):
+            self.display_fields = display_fields
+            self.display_renderer = display_renderer
+            super().__init__(attrs)
+
         class Media:
             css = {
                 'all': [
@@ -70,18 +80,29 @@ class GridSelectManyToManyField(models.ManyToManyField):
                 obj_id = obj.pk
                 selected = str(obj_id) in value
 
-                # Lấy các trường cần hiển thị
-                content_lines = []
-                for field in obj._meta.fields:
-                    verbose = field.verbose_name.capitalize()
-                    val = getattr(obj, field.name)
-                    if isinstance(field, models.ImageField) and val:
-                        val_display = f'<img src="{val.url}" class="img-fluid mb-1 rounded" style="max-height:100px;"><br>{val.name}'
+                # Nếu có display_renderer → gọi hàm hiển thị custom
+                if self.display_renderer and hasattr(obj, self.display_renderer):
+                    render_func = getattr(obj, self.display_renderer)
+                    if callable(render_func):
+                        content = render_func()
                     else:
-                        val_display = str(val)
-                    content_lines.append(f"<strong>{verbose}:</strong> {val_display}")
+                        content = str(render_func)
+                else:
+                    # Nếu có display_fields → chỉ hiển thị những field đó
+                    fields = self.display_fields or [f.name for f in obj._meta.fields]
 
-                content = "<br>".join(content_lines)
+                    content_lines = []
+                    for field_name in fields:
+                        field = obj._meta.get_field(field_name)
+                        verbose = field.verbose_name.capitalize()
+                        val = getattr(obj, field_name)
+                        if isinstance(field, models.ImageField) and val:
+                            val_display = f'<img src="{val.url}" class="img-fluid mb-1 rounded" style="max-height:100px;"><br>{val.name}'
+                        else:
+                            val_display = str(val)
+                        content_lines.append(f"<strong>{verbose}:</strong> {val_display}")
+
+                    content = "<br>".join(content_lines)
 
                 item_html = format_html(
                     '''
