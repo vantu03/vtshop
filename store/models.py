@@ -14,6 +14,9 @@ class Image(models.Model):
 
     def __str__(self):
         return self.alt_text or self.image.name
+    
+    def image_preview(self):
+        return format_html('<img src="{}" style="max-height:100px;">', self.image.url)
 
 class Category(models.Model):
     icon = models.ForeignKey(
@@ -53,14 +56,6 @@ class Brand(models.Model):
 
 class Product(models.Model):
 
-    def image_preview(self):
-        if self.image:
-            return format_html(
-                '<div class="text-center"><img src="{}" class="img-fluid mb-2 rounded" style="max-height:120px;"><br><small>{}</small></div>',
-                self.image.url,
-                self.alt_text or self.image.name
-            )
-        return "-"
 
     title = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
