@@ -80,27 +80,26 @@ class GridSelectManyToManyField(models.ManyToManyField):
                 obj_id = obj.pk
                 selected = str(obj_id) in value
 
+                fields = self.display_fields or [f.name for f in obj._meta.fields]
+                content_lines = []
+
                 if self.display_renderer and hasattr(obj, self.display_renderer):
                     render_func = getattr(obj, self.display_renderer)
-                    content = render_func() if callable(render_func) else str(render_func)
-                else:
+                    content_lines.append(render_func() if callable(render_func) else str(render_func))
 
-                    fields = self.display_fields or [f.name for f in obj._meta.fields]
-                    content_lines = []
-                    
-                    for field_name in fields:
-                        field = obj._meta.get_field(field_name)
-                        val = getattr(obj, field_name)
-                        val_display = str(val)
+                for field_name in fields:
+                    field = obj._meta.get_field(field_name)
+                    val = getattr(obj, field_name)
+                    val_display = str(val)
 
-                        content_lines.append(
-                            f'''
-                            <div class="text-truncate small" title="{val_display}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                <strong>{field.verbose_name.capitalize()}:</strong> {val_display}
-                            </div>
-                            '''
-                        )
-                    content = ''.join(content_lines)
+                    content_lines.append(
+                        f'''
+                        <div class="text-truncate small" title="{val_display}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            <strong>{field.verbose_name.capitalize()}:</strong> {val_display}
+                        </div>
+                        '''
+                    )
+                content = ''.join(content_lines)
 
                 # Card layout
                 checkbox_id = f"id_{name}_{obj_id}"
