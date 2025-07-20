@@ -11,7 +11,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'uploaded_at', 'image_preview')
+    list_display = ('image_preview', '__str__', 'uploaded_at',)
     search_fields = ('alt_text',)
 
     def image_preview(self, obj):
