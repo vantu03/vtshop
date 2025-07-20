@@ -60,8 +60,8 @@ class GridSelectModalWidget(forms.CheckboxSelectMultiple):
 
             # Ghép nhãn và giá trị
             content_lines = []
-            for label, val in zip(self.field_labels, row_values):
-                content_lines.append(f"<strong>{label}</strong>: {val}")
+            for val in row_values:
+                content_lines.append(f"{val}")
             content = "<br>".join(content_lines)
 
 
