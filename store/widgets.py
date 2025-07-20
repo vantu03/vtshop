@@ -80,19 +80,23 @@ class GridSelectManyToManyField(models.ManyToManyField):
                 obj_id = obj.pk
                 selected = str(obj_id) in value
                 html_parts = []
-
-                # Render preview nếu có
-                if self.display_renderer and hasattr(obj, self.display_renderer):
-                    renderer = getattr(obj, self.display_renderer)
-                    html_parts.append(renderer() if callable(renderer) else str(renderer))
-
                 # Render các field
                 for field_name in self.display_fields or [f.name for f in obj._meta.fields]:
-                    value = getattr(obj, field_name, "")
-                    if hasattr(value, 'url'):  # ImageField
-                        html_parts.append(f'<div><img src="{value.url}" style="max-height:100px;"></div>')
+                    if (
+                            self.display_renderer == field_name
+                            and hasattr(obj, field_name)
+                    ):
+                        render_func = getattr(obj, field_name)
+                        html_parts.append(render_func() if callable(render_func) else str(render_func))
                     else:
-                        html_parts.append(f'<div><strong>{field_name}:</strong> {value}</div>')
+                        val = getattr(obj, field_name, "")
+                        html_parts.append(
+                            f'''
+                            <div class="text-truncate small" title="{val}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <strong>{field_name.capitalize()}:</strong> {val}
+                            </div>
+                            '''
+                        )
 
                 content = ''.join(html_parts)
 
