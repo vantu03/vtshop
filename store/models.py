@@ -67,7 +67,6 @@ class Product(models.Model):
         Image,
         related_name='images',
         blank=True,
-        display_fields=['image', 'alt_text']
     )
     is_active = models.BooleanField(default=True)
     view_count = models.PositiveIntegerField(default=0)
