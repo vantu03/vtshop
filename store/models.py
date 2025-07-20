@@ -18,7 +18,7 @@ class Image(models.Model):
     def image_preview(self):
         if self.image:
             return format_html(
-                '<img src="{}" class="img-fluid rounded" style="max-height:100px;"><br><small>{}</small>',
+                '<div class="text-center"><img src="{}" class="img-fluid mb-2 rounded" style="max-height:120px;"><br><small>{}</small></div>',
                 self.image.url,
                 self.alt_text or self.image.name
             )
