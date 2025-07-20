@@ -63,7 +63,12 @@ class Product(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
-    images = GridSelectManyToManyField(Image, related_name='images', blank=True)
+    images = GridSelectManyToManyField(
+        Image,
+        related_name='images',
+        blank=True,
+        display_fields=['image', 'alt_text']
+    )
     is_active = models.BooleanField(default=True)
     view_count = models.PositiveIntegerField(default=0)
     sold = models.PositiveIntegerField(default=0)
