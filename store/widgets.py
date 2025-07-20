@@ -53,9 +53,17 @@ class GridSelectModalWidget(forms.CheckboxSelectMultiple):
 
         grid_items = []
         for option in self.choices:
-            obj = option[1]
             obj_id = option[0]
             selected = str(obj_id) in value
+
+            row_values = option[1:]  # các trường dữ liệu
+
+            # Ghép nhãn và giá trị
+            content_lines = []
+            for label, val in zip(self.field_labels, row_values):
+                content_lines.append(f"<strong>{label}</strong>: {val}")
+            content = "<br>".join(content_lines)
+
 
             item_html = format_html(
                 '''
@@ -69,7 +77,7 @@ class GridSelectModalWidget(forms.CheckboxSelectMultiple):
                 name=name,
                 value=obj_id,
                 checked='checked' if selected else '',
-                content=obj,
+                content=content,
             )
             grid_items.append(item_html)
 
