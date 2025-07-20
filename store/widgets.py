@@ -51,6 +51,9 @@ class GridSelectModalWidget(forms.CheckboxSelectMultiple):
             </div>
         '''
 
+        for value, label in self.choices:
+            print(f"{label}: {value}")
+            
         grid_items = []
         for option in self.choices:
             obj_id = option[0]
