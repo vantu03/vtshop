@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import Category, Image, Product, ProductVariant, ProductContent, Order, Promotion, Review, Star, OrderItem, Brand
 from django.utils.html import format_html
+from django import forms
+from .widgets import ImageMultiSelectWidget
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -24,6 +26,16 @@ class ImageAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+
+    class ProductAdminForm(forms.ModelForm):
+        class Meta:
+            model = Product
+            fields = '__all__'
+            widgets = {
+                'images': ImageMultiSelectWidget,
+            }
+
+    form = ProductAdminForm
 
     class ProductVariantInline(admin.TabularInline):
         model = ProductVariant
